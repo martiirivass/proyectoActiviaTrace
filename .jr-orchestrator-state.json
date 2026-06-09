@@ -95,9 +95,13 @@
       "tailwind-design-system",
       "playwright-best-practices",
       "code-review-excellence",
-      "systematic-debugging"
+      "systematic-debugging",
+      "react-best-practices",
+      "modern-web-development",
+      "playwright-skill",
+      "fastapi-python"
     ],
-    "note": "Stack cubierto ~100% por skills preinstaladas. Unico gap: React (vercel-react-best-practices) - usuario decidio NO instalar; queda como recomendacion pendiente."
+    "note": "Stack cubierto ~100% por skills preinstaladas. Gap React cubierto con 0xbigboss/claude-code@react-best-practices (2.7K). Agregadas: modern-web-development (TS+React+Tailwind), playwright-skill (E2E), fastapi-python (refuerzo backend)."
   },
   "agents": {
     "created_by": "agent-instruction",
