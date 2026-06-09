@@ -1,8 +1,8 @@
 import os
 
-os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/activia_trace_test")
-os.environ.setdefault("SECRET_KEY", "a" * 32)
-os.environ.setdefault("ENCRYPTION_KEY", "b" * 32)
+os.environ["DATABASE_URL"] = "postgresql+asyncpg://postgres:postgres@localhost:5433/activia_trace_test"
+os.environ["SECRET_KEY"] = "a" * 32
+os.environ["ENCRYPTION_KEY"] = "b" * 32
 
 import pytest
 from httpx import ASGITransport, AsyncClient
