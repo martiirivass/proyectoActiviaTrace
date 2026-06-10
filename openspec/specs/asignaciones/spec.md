@@ -71,3 +71,32 @@ El sistema SHALL permitir que una asignación tenga un `responsable_id` que mode
 - **WHEN** se crea una asignación con `responsable_id` válido
 - **THEN** el responsable queda registrado
 - **AND** se puede consultar la relación desde ambos lados
+
+### Requirement: Filtrar asignaciones por dictado
+El sistema SHALL permitir filtrar asignaciones por `dictado_id`.
+
+#### Scenario: Filtrar por dictado_id
+- **WHEN** se consulta GET `/api/v1/admin/asignaciones?dictado_id=<uuid>`
+- **THEN** retorna solo asignaciones de ese dictado
+
+### Requirement: Filtrar asignaciones por carrera y cohorte
+El sistema SHALL permitir filtrar asignaciones por carrera y cohorte a través del dictado.
+
+#### Scenario: Filtrar por carrera
+- **WHEN** se consulta GET `/api/v1/admin/asignaciones?carrera_id=<uuid>`
+- **THEN** retorna solo asignaciones de carreras que coinciden
+
+#### Scenario: Filtrar por cohorte
+- **WHEN** se consulta GET `/api/v1/admin/asignaciones?cohorte_id=<uuid>`
+- **THEN** retorna solo asignaciones de cohortes que coinciden
+
+### Requirement: Asignaciones con datos del dictado
+El sistema SHALL devolver datos del dictado (materia, carrera, cohorte) al consultar asignaciones.
+
+#### Scenario: Asignación incluye dictado
+- **WHEN** se consulta GET `/api/v1/admin/asignaciones/{id}`
+- **THEN** la respuesta incluye `dictado` anidado con `materia_nombre`, `carrera_nombre`, `cohorte_nombre`
+
+#### Scenario: Lista incluye dictado
+- **WHEN** se consulta GET `/api/v1/admin/asignaciones`
+- **THEN** cada asignación incluye `dictado` anidado si tiene contexto académico
