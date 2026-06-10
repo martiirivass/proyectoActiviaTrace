@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     secret_key: str = Field(..., alias="SECRET_KEY", min_length=32)
     encryption_key: str = Field(..., alias="ENCRYPTION_KEY", min_length=32, max_length=32)
     access_token_expire_minutes: int = Field(default=15, alias="ACCESS_TOKEN_EXPIRE_MINUTES")
+    refresh_token_expire_days: int = Field(default=30, alias="REFRESH_TOKEN_EXPIRE_DAYS")
+    two_fa_token_expire_minutes: int = Field(default=5, alias="2FA_TOKEN_EXPIRE_MINUTES")
+    jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
     otel_exporter_otlp_endpoint: str | None = Field(default=None, alias="OTEL_EXPORTER_OTLP_ENDPOINT")
     otel_service_name: str = Field(default="activia-trace-api", alias="OTEL_SERVICE_NAME")
 
