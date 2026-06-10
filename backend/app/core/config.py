@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
     otel_exporter_otlp_endpoint: str | None = Field(default=None, alias="OTEL_EXPORTER_OTLP_ENDPOINT")
     otel_service_name: str = Field(default="activia-trace-api", alias="OTEL_SERVICE_NAME")
+    moodle_enabled: bool = Field(default=False, alias="MOODLE_ENABLED")
+    moodle_url: str = Field(default="", alias="MOODLE_URL")
+    moodle_token: str = Field(default="", alias="MOODLE_TOKEN")
+    moodle_timeout: int = Field(default=30, alias="MOODLE_TIMEOUT")
 
     @field_validator("encryption_key")
     @classmethod
