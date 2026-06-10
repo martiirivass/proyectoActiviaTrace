@@ -1,10 +1,20 @@
 import uuid
+from datetime import datetime, timezone
 
 import pytest
 from sqlalchemy import inspect
 
 from app.core.database import Base
-from app.models import Permission, Role, Tenant, User, UserRole, UserTenant
+from app.models import (
+    Permission,
+    RecoveryToken,
+    RefreshToken,
+    Role,
+    Tenant,
+    User,
+    UserRole,
+    UserTenant,
+)
 from app.models.mixins import SoftDeleteMixin
 
 
@@ -225,5 +235,94 @@ class TestUserModelDB:
 
         user2 = User(email="e2@test.com", legajo="LEG-UNIQUE", nombre="C", apellido="D", password_hash="h2")
         db_session.add(user2)
+        with pytest.raises(Exception):
+            await db_session.flush()
+
+    async def test_user_has_2fa_defaults(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="2fa@test.com", legajo="LEG-2FA", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+        assert user.totp_secret is None
+        assert user.is_2fa_enabled is False
+
+    async def test_user_can_set_2fa_fields(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(
+            email="2fa-on@test.com", legajo="LEG-2FA2", nombre="A", apellido="B",
+            password_hash="h", totp_secret="encrypted_secret", is_2fa_enabled=True,
+        )
+        db_session.add(user)
+        await db_session.flush()
+        assert user.totp_secret == "encrypted_secret"
+        assert user.is_2fa_enabled is True
+
+
+class TestRefreshTokenModelDB:
+    async def test_create_refresh_token(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="rt@test.com", legajo="LEG-RT", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+
+        token = RefreshToken(user_id=user.id, token_hash="abc123", expires_at=datetime.now(timezone.utc))
+        db_session.add(token)
+        await db_session.flush()
+
+        assert token.id is not None
+        assert isinstance(token.id, uuid.UUID)
+        assert token.user_id == user.id
+        assert token.token_hash == "abc123"
+        assert token.revoked_at is None
+
+    async def test_refresh_token_unique_hash(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="rt2@test.com", legajo="LEG-RT2", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+
+        t1 = RefreshToken(user_id=user.id, token_hash="same-hash", expires_at=datetime.now(timezone.utc))
+        db_session.add(t1)
+        await db_session.flush()
+
+        t2 = RefreshToken(user_id=user.id, token_hash="same-hash", expires_at=datetime.now(timezone.utc))
+        db_session.add(t2)
+        with pytest.raises(Exception):
+            await db_session.flush()
+
+    async def test_refresh_token_hash_indexed(self, test_engine):
+        col = RefreshToken.__table__.c["token_hash"]
+        assert col.unique
+        assert col.index
+
+
+class TestRecoveryTokenModelDB:
+    async def test_create_recovery_token(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="rec@test.com", legajo="LEG-REC", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+
+        token = RecoveryToken(user_id=user.id, token_hash="def456", expires_at=datetime.now(timezone.utc))
+        db_session.add(token)
+        await db_session.flush()
+
+        assert token.id is not None
+        assert isinstance(token.id, uuid.UUID)
+        assert token.user_id == user.id
+        assert token.used_at is None
+
+    async def test_recovery_token_unique_hash(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="rec2@test.com", legajo="LEG-REC2", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+
+        t1 = RecoveryToken(user_id=user.id, token_hash="same", expires_at=datetime.now(timezone.utc))
+        db_session.add(t1)
+        await db_session.flush()
+
+        t2 = RecoveryToken(user_id=user.id, token_hash="same", expires_at=datetime.now(timezone.utc))
+        db_session.add(t2)
         with pytest.raises(Exception):
             await db_session.flush()
