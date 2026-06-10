@@ -7,6 +7,7 @@ from app.core.observability import init_opentelemetry
 from app.core.database import engine
 from app.api.v1.routers import audit, auth, health
 from app.api.v1.routers.admin_asignaciones import asignaciones_router
+from app.api.v1.routers.equipos import equipos_router
 from app.api.v1.routers.admin_estructura import (
     carreras_router,
     cohortes_router,
@@ -44,6 +45,7 @@ def create_app() -> FastAPI:
 
     app.include_router(usuarios_router)
     app.include_router(asignaciones_router)
+    app.include_router(equipos_router)
 
     return app
 
