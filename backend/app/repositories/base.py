@@ -59,6 +59,8 @@ class BaseRepository(Generic[T]):
         obj = result.scalar_one_or_none()
         if obj is None:
             raise ValueError(f"{self.model.__name__} with id {id} not found")
+        if hasattr(obj, "is_system") and obj.is_system:
+            raise ValueError("Cannot delete system role")
         obj.soft_delete()
         await self.session.flush()
 

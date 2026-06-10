@@ -12,6 +12,7 @@ from app.core.rate_limiter import RateLimiter
 from app.core.security import verify_token
 from app.models import Tenant, User
 from app.schemas.auth import CurrentUser
+from app.services.permission_service import PermissionService
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -54,6 +55,21 @@ async def get_current_user(
         tenant_id=UUID(payload["tenant_id"]),
         roles=payload.get("roles", []),
     )
+
+
+def require_permission(codename: str):
+    async def _check_permission(
+        current_user: CurrentUser = Depends(get_current_user),
+        db: AsyncSession = Depends(get_db),
+    ) -> None:
+        svc = PermissionService(db)
+        permissions = await svc.get_effective_permissions(current_user.id)
+        if codename not in permissions:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Missing required permission: {codename}",
+            )
+    return _check_permission
 
 
 async def get_tenant(
