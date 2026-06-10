@@ -5,7 +5,7 @@ from app.core.config import get_settings
 from app.core.logging import setup_logging
 from app.core.observability import init_opentelemetry
 from app.core.database import engine
-from app.api.v1.routers import auth, health
+from app.api.v1.routers import audit, auth, health
 
 
 @asynccontextmanager
@@ -27,6 +27,7 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(auth.router, prefix="/api/v1/auth")
+    app.include_router(audit.router, prefix="/api/v1/audit")
 
     return app
 
