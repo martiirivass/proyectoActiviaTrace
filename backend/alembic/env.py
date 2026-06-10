@@ -13,6 +13,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from app.core.config import get_settings
 from app.core.database import Base
+from app import models
 
 config = context.config
 
