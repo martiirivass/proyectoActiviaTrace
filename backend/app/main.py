@@ -6,12 +6,14 @@ from app.core.logging import setup_logging
 from app.core.observability import init_opentelemetry
 from app.core.database import engine
 from app.api.v1.routers import audit, auth, health
+from app.api.v1.routers.admin_asignaciones import asignaciones_router
 from app.api.v1.routers.admin_estructura import (
     carreras_router,
     cohortes_router,
     dictados_router,
     materias_router,
 )
+from app.api.v1.routers.admin_usuarios import usuarios_router
 
 
 @asynccontextmanager
@@ -39,6 +41,9 @@ def create_app() -> FastAPI:
     app.include_router(cohortes_router)
     app.include_router(materias_router)
     app.include_router(dictados_router)
+
+    app.include_router(usuarios_router)
+    app.include_router(asignaciones_router)
 
     return app
 
