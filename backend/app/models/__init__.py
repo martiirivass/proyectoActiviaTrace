@@ -8,10 +8,15 @@ from app.models.user_tenant import UserTenant
 from app.models.audit_log import AuditLog
 from app.models.refresh_token import RefreshToken
 from app.models.recovery_token import RecoveryToken
+from app.models.carrera import Carrera
+from app.models.cohorte import Cohorte
+from app.models.materia import Materia
+from app.models.dictado import Dictado
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
     "UserRole", "UserTenant",
     "RefreshToken", "RecoveryToken",
     "AuditLog",
+    "Carrera", "Cohorte", "Materia", "Dictado",
 ]
