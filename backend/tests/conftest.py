@@ -54,6 +54,13 @@ async def db_session(test_session_factory):
         yield session
 
 
+@pytest_asyncio.fixture(autouse=True)
+async def reset_globals():
+    from app.core.dependencies import reset_rate_limiter
+    await reset_rate_limiter()
+    yield
+
+
 @pytest_asyncio.fixture
 async def client(db_session):
     from app.core.dependencies import get_db
