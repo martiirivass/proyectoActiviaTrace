@@ -12,6 +12,7 @@ from app.models.carrera import Carrera
 from app.models.cohorte import Cohorte
 from app.models.materia import Materia
 from app.models.dictado import Dictado
+from app.models.asignacion import Asignacion
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -19,4 +20,5 @@ __all__ = [
     "RefreshToken", "RecoveryToken",
     "AuditLog",
     "Carrera", "Cohorte", "Materia", "Dictado",
+    "Asignacion",
 ]
