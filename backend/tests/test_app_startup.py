@@ -1,6 +1,5 @@
 import os
 
-os.environ["DATABASE_URL"] = "postgresql+asyncpg://postgres:postgres@localhost:5433/activia_trace_test"
 os.environ["SECRET_KEY"] = "a" * 32
 os.environ["ENCRYPTION_KEY"] = "b" * 32
 

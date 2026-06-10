@@ -35,6 +35,7 @@ async def _setup_tenant_with_user(db_session, tenant=None):
         await db_session.flush()
 
     user = User(
+        tenant_id=tenant.id,
         email=f"pad-{uuid.uuid4().hex[:8]}@test.com",
         legajo=f"LEG-{uuid.uuid4().hex[:8]}",
         nombre="Padron",

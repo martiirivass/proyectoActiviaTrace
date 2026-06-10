@@ -44,6 +44,7 @@ async def _create_tenant_and_user(db_session, role_name="ADMIN", code=None):
         legajo=f"LEG-{uuid.uuid4().hex[:8]}",
         nombre="Audit",
         apellido="Test",
+        tenant_id=tenant.id,
         password_hash=PasswordService.hash("pass"),
     )
     db_session.add(user)

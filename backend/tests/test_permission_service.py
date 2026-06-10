@@ -42,6 +42,7 @@ async def _assign_permission(db_session, role_id: uuid.UUID, permission_id: uuid
 
 async def _create_user_with_role(db_session, tenant_id: uuid.UUID, role_id: uuid.UUID):
     user = User(
+        tenant_id=tenant_id,
         email=f"user-{uuid.uuid4().hex[:8]}@test.com",
         legajo=f"LEG-{uuid.uuid4().hex[:8]}",
         nombre="Test", apellido="User",
@@ -98,6 +99,7 @@ class TestGetEffectivePermissions:
     async def test_no_roles_returns_empty_set(self, db_session, test_engine):
         tenant = await _create_tenant(db_session)
         user = User(
+            tenant_id=tenant.id,
             email="nobody@test.com", legajo="LEG-NO-ROLES",
             nombre="No", apellido="Roles",
             password_hash=PasswordService.hash("pass"),
