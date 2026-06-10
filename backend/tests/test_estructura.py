@@ -16,6 +16,7 @@ async def _setup_admin_user(db_session, tenant=None):
         await db_session.flush()
 
     user = User(
+        tenant_id=tenant.id,
         email=f"est-{uuid.uuid4().hex[:8]}@test.com",
         legajo=f"LEG-{uuid.uuid4().hex[:8]}",
         nombre="Estructura",
@@ -61,6 +62,7 @@ async def _setup_user_without_permission(db_session, tenant=None):
         await db_session.flush()
 
     user = User(
+        tenant_id=tenant.id,
         email=f"np-{uuid.uuid4().hex[:8]}@test.com",
         legajo=f"LEG-{uuid.uuid4().hex[:8]}",
         nombre="NoPerm",

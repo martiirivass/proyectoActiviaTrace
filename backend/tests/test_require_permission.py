@@ -18,6 +18,7 @@ async def _setup_user_with_permission(db_session, permission_codename: str):
     await db_session.flush()
 
     user = User(
+        tenant_id=tenant.id,
         email=f"perm-{uuid.uuid4().hex[:8]}@test.com",
         legajo=f"LEG-{uuid.uuid4().hex[:8]}",
         nombre="Perm", apellido="Test",
@@ -107,6 +108,7 @@ class TestRequirePermission:
         await db_session.flush()
 
         user = User(
+            tenant_id=tenant.id,
             email="union@test.com", legajo="LEG-UNION",
             nombre="Union", apellido="Test",
             password_hash=PasswordService.hash("pass"),

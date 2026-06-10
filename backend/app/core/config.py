@@ -35,4 +35,10 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    settings = Settings()
+    return settings
+
+
+def refresh_settings() -> None:
+    """Clear the cached settings so next call re-reads from env."""
+    get_settings.cache_clear()

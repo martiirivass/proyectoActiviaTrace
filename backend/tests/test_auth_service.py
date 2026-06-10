@@ -30,6 +30,7 @@ async def _create_tenant_and_user(db_session, email="test@example.com", password
     await db_session.flush()
 
     user = User(
+        tenant_id=tenant.id,
         email=email,
         legajo="LEG-AUTH",
         nombre="Test",

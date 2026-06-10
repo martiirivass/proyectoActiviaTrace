@@ -34,7 +34,7 @@ class AsignacionService:
 
     async def create(self, data) -> Asignacion:
         if data.rol not in ROLES_VALIDOS:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"Rol inválido: {data.rol}")
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Rol inválido: {data.rol}")
         return await self.repo.create(**data.model_dump())
 
     async def get(self, id: UUID) -> Asignacion:
@@ -71,7 +71,7 @@ class AsignacionService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Asignación no encontrada")
         kwargs = data.model_dump(exclude_none=True)
         if "rol" in kwargs and kwargs["rol"] not in ROLES_VALIDOS:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"Rol inválido: {kwargs['rol']}")
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Rol inválido: {kwargs['rol']}")
         return await self.repo.update(id, **kwargs)
 
     async def delete(self, id: UUID) -> None:
@@ -103,7 +103,7 @@ class AsignacionService:
         usuario_ids: list[UUID],
     ) -> list[Asignacion]:
         if rol not in ROLES_VALIDOS:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"Rol inválido: {rol}")
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Rol inválido: {rol}")
 
         # Validate dictado exists
         dictado = await self.dictado_repo.get(dictado_id)
@@ -115,7 +115,7 @@ class AsignacionService:
         for uid in usuario_ids:
             if uid in seen:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail=f"Usuario duplicado: {uid}",
                 )
             seen.add(uid)
@@ -127,7 +127,7 @@ class AsignacionService:
             user = result.scalar_one_or_none()
             if user is None:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail=f"Usuario no encontrado: {uid}",
                 )
 
@@ -198,7 +198,7 @@ class AsignacionService:
     ) -> int:
         if hasta is not None and desde > hasta:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="La fecha 'desde' no puede ser posterior a 'hasta'",
             )
 

@@ -120,7 +120,7 @@ async def _seed_full_environment(db_session):
 class TestSeedDataPermissions:
     async def test_alumno_has_limited_permissions(self, db_session, test_engine):
         tenant, roles, perms = await _seed_full_environment(db_session)
-        user = User(email="alumno@test.com", legajo="LEG-ALUMNO",
+        user = User(tenant_id=tenant.id, email="alumno@test.com", legajo="LEG-ALUMNO",
                      nombre="Alumno", apellido="Test",
                      password_hash=PasswordService.hash("pass"))
         db_session.add(user)
@@ -144,7 +144,7 @@ class TestSeedDataPermissions:
 
     async def test_admin_has_all_management_permissions(self, db_session, test_engine):
         tenant, roles, perms = await _seed_full_environment(db_session)
-        user = User(email="admin@test.com", legajo="LEG-ADMIN",
+        user = User(tenant_id=tenant.id, email="admin@test.com", legajo="LEG-ADMIN",
                      nombre="Admin", apellido="Test",
                      password_hash=PasswordService.hash("pass"))
         db_session.add(user)
@@ -168,7 +168,7 @@ class TestSeedDataPermissions:
 
     async def test_finanzas_has_only_financial_permissions(self, db_session, test_engine):
         tenant, roles, perms = await _seed_full_environment(db_session)
-        user = User(email="finanzas@test.com", legajo="LEG-FINANZAS",
+        user = User(tenant_id=tenant.id, email="finanzas@test.com", legajo="LEG-FINANZAS",
                      nombre="Finanzas", apellido="Test",
                      password_hash=PasswordService.hash("pass"))
         db_session.add(user)
