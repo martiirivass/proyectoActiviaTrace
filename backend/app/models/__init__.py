@@ -13,6 +13,8 @@ from app.models.cohorte import Cohorte
 from app.models.materia import Materia
 from app.models.dictado import Dictado
 from app.models.asignacion import Asignacion
+from app.models.version_padron import VersionPadron
+from app.models.entrada_padron import EntradaPadron
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -21,4 +23,5 @@ __all__ = [
     "AuditLog",
     "Carrera", "Cohorte", "Materia", "Dictado",
     "Asignacion",
+    "VersionPadron", "EntradaPadron",
 ]

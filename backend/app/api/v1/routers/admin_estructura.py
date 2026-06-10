@@ -23,12 +23,14 @@ from app.schemas.estructura import (
     MateriaResponse,
     MateriaUpdate,
 )
+from app.schemas.padron import VaciarMateriaResponse
 from app.services.estructura_service import (
     CarreraService,
     CohorteService,
     DictadoService,
     MateriaService,
 )
+from app.services.padron_service import PadronService
 
 carreras_router = APIRouter(prefix="/api/v1/admin/carreras", tags=["Estructura - Carreras"])
 cohortes_router = APIRouter(prefix="/api/v1/admin/cohortes", tags=["Estructura - Cohortes"])
@@ -215,6 +217,21 @@ async def delete_materia(
 ):
     svc = MateriaService(db, current_user.tenant_id)
     await svc.delete(id)
+
+
+@materias_router.delete("/{id}/vaciar", response_model=VaciarMateriaResponse, status_code=200)
+async def vaciar_materia(
+    id: UUID,
+    current_user: CurrentUser = Depends(get_current_user),
+    _: None = Depends(require_permission("padron:vaciar")),
+    db: AsyncSession = Depends(get_db),
+):
+    svc = PadronService(db, current_user.tenant_id)
+    result = await svc.vaciar_materia(id, current_user.id)
+    return VaciarMateriaResponse(
+        materia_id=result["materia_id"],
+        versiones_afectadas=result["versiones_afectadas"],
+    )
 
 
 @dictados_router.post("/", response_model=DictadoResponse, status_code=201)
