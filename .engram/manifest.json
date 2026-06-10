@@ -72,6 +72,14 @@
       "sessions": 0,
       "memories": 0,
       "prompts": 5
+    },
+    {
+      "id": "d0c44eee",
+      "created_by": "maxis",
+      "created_at": "2026-06-10T01:59:03Z",
+      "sessions": 0,
+      "memories": 0,
+      "prompts": 1
     }
   ]
 }
