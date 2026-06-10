@@ -10,6 +10,7 @@ from app.models import (
     RecoveryToken,
     RefreshToken,
     Role,
+    RolePermission,
     Tenant,
     User,
     UserRole,
@@ -100,10 +101,22 @@ class TestRoleModel:
         col = Role.__table__.c["tenant_id"]
         assert len(col.foreign_keys) > 0
 
+    def test_has_is_system_column(self):
+        col = Role.__table__.c["is_system"]
+        assert col is not None
+        assert col.default is not None
+        assert col.default.arg is False
+
+    def test_has_description_column(self):
+        col = Role.__table__.c["description"]
+        assert col is not None
+        assert col.nullable
+
     def test_has_relationships(self):
         mapper = inspect(Role)
         rel_names = [r.key for r in mapper.relationships]
         assert "user_roles" in rel_names
+        assert "role_permissions" in rel_names
 
 
 class TestPermissionModel:
@@ -122,6 +135,60 @@ class TestPermissionModel:
         col = Permission.__table__.c["name"]
         assert col.comment is not None
         assert "modulo:accion" in col.comment
+
+    def test_has_module_column(self):
+        col = Permission.__table__.c["module"]
+        assert col is not None
+        assert not col.nullable
+
+    def test_has_action_column(self):
+        col = Permission.__table__.c["action"]
+        assert col is not None
+        assert not col.nullable
+
+    def test_has_timestamps(self):
+        assert "created_at" in Permission.__table__.c
+        assert "updated_at" in Permission.__table__.c
+
+
+class TestRolePermissionModel:
+    def test_no_soft_delete(self):
+        assert not issubclass(RolePermission, SoftDeleteMixin)
+
+    def test_has_uuid_pk(self):
+        col = RolePermission.__table__.c["id"]
+        assert col.primary_key
+
+    def test_has_role_id_fk(self):
+        col = RolePermission.__table__.c["role_id"]
+        assert len(col.foreign_keys) > 0
+
+    def test_has_permission_id_fk(self):
+        col = RolePermission.__table__.c["permission_id"]
+        assert len(col.foreign_keys) > 0
+
+    def test_has_tenant_id_fk(self):
+        col = RolePermission.__table__.c["tenant_id"]
+        assert len(col.foreign_keys) > 0
+
+    def test_has_scope_column(self):
+        col = RolePermission.__table__.c["scope"]
+        assert col is not None
+        assert not col.nullable
+
+    def test_unique_role_permission(self):
+        constraints = [c for c in RolePermission.__table__.constraints if "uq_role_permission" in str(c.name or "")]
+        assert len(constraints) == 1
+        uq = constraints[0]
+        cols = [c.name for c in uq.columns]
+        assert "role_id" in cols
+        assert "permission_id" in cols
+
+    def test_has_relationships(self):
+        mapper = inspect(RolePermission)
+        rel_names = [r.key for r in mapper.relationships]
+        assert "role" in rel_names
+        assert "permission" in rel_names
 
 
 class TestUserRoleModel:
