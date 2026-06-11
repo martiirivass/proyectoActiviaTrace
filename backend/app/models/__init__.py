@@ -17,6 +17,8 @@ from app.models.version_padron import VersionPadron
 from app.models.entrada_padron import EntradaPadron
 from app.models.calificacion import Calificacion
 from app.models.umbral_materia import UmbralMateria
+from app.models.comunicacion import Comunicacion, EstadoComunicacion
+from app.models.lote_comunicacion import LoteComunicacion, EstadoLote
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -27,4 +29,6 @@ __all__ = [
     "Asignacion",
     "VersionPadron", "EntradaPadron",
     "Calificacion", "UmbralMateria",
+    "Comunicacion", "EstadoComunicacion",
+    "LoteComunicacion", "EstadoLote",
 ]

@@ -25,6 +25,16 @@ class Settings(BaseSettings):
     moodle_token: str = Field(default="", alias="MOODLE_TOKEN")
     moodle_timeout: int = Field(default=30, alias="MOODLE_TIMEOUT")
 
+    # SMTP / Worker
+    smtp_host: str = Field(default="localhost", alias="SMTP_HOST")
+    smtp_port: int = Field(default=587, alias="SMTP_PORT")
+    smtp_user: str = Field(default="", alias="SMTP_USER")
+    smtp_password: str = Field(default="", alias="SMTP_PASSWORD")
+    smtp_from_address: str = Field(default="noreply@activia-trace.com", alias="SMTP_FROM_ADDRESS")
+    smtp_use_tls: bool = Field(default=True, alias="SMTP_USE_TLS")
+    worker_poll_interval: int = Field(default=30, alias="WORKER_POLL_INTERVAL")
+    worker_batch_size: int = Field(default=20, alias="WORKER_BATCH_SIZE")
+
     @field_validator("encryption_key")
     @classmethod
     def validate_encryption_key_length(cls, v: str) -> str:
