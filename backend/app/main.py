@@ -18,6 +18,7 @@ from app.api.v1.routers.admin_estructura import (
 )
 from app.api.v1.routers.admin_usuarios import usuarios_router
 from app.api.v1.routers.analisis import router as analisis_router
+from app.api.v1.routers.comunicaciones import router as comunicaciones_router
 
 
 @asynccontextmanager
@@ -52,6 +53,7 @@ def create_app() -> FastAPI:
     app.include_router(padron_router)
     app.include_router(calificaciones_router)
     app.include_router(analisis_router)
+    app.include_router(comunicaciones_router)
 
     return app
 
