@@ -19,6 +19,9 @@ from app.models.calificacion import Calificacion
 from app.models.umbral_materia import UmbralMateria
 from app.models.comunicacion import Comunicacion, EstadoComunicacion
 from app.models.lote_comunicacion import LoteComunicacion, EstadoLote
+from app.models.slot_encuentro import SlotEncuentro, DiaSemana
+from app.models.instancia_encuentro import InstanciaEncuentro, EstadoInstancia
+from app.models.guardia import Guardia, DiaGuardia, EstadoGuardia
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -31,4 +34,7 @@ __all__ = [
     "Calificacion", "UmbralMateria",
     "Comunicacion", "EstadoComunicacion",
     "LoteComunicacion", "EstadoLote",
+    "SlotEncuentro", "DiaSemana",
+    "InstanciaEncuentro", "EstadoInstancia",
+    "Guardia", "DiaGuardia", "EstadoGuardia",
 ]
