@@ -15,6 +15,9 @@
 | Adding HelpButton or creating Dashboard page | help-system-content | `.agents/skills/help-system-content/SKILL.md` |
 | Creating component libraries, design systems | tailwind-design-system | `.agents/skills/tailwind-design-system/SKILL.md` |
 | Building knowledge base from scratch or docs | kb-creator | `.agents/skills/kb-creator/SKILL.md` |
+| FastAPI endpoints, routers, Pydantic | fastapi-templates | `.agents/skills/fastapi-templates/SKILL.md` |
+| Python test patterns, project style | python-testing-patterns | `.agents/skills/python-testing-patterns/SKILL.md` |
+| RED→GREEN→TRIANGULATE→REFACTOR TDD cycle | test-driven-development | `.agents/skills/test-driven-development/SKILL.md` |
 | Implementing tasks from a change | openspec-apply-change | `.claude/skills/openspec-apply-change/SKILL.md` |
 | Archiving a completed change | openspec-archive-change | `.claude/skills/openspec-archive-change/SKILL.md` |
 | Exploring ideas, investigating problems | openspec-explore | `.claude/skills/openspec-explore/SKILL.md` |
@@ -40,6 +43,34 @@
 ## Compact Rules
 
 Pre-digested rules per skill. Delegators copy matching blocks into sub-agent prompts as `## Project Standards (auto-resolved)`.
+
+### fastapi-templates
+- Proyecto estructurado: `api/v1/endpoints/` → `services/` → `repositories/` → `models/`
+- Router NUNCA tiene lógica de negocio — solo validación + delegación a Service
+- Service orquesta reglas de negocio, llama a Repository
+- Repository solo hace queries SQLAlchemy, recibe session por constructor
+- Async handlers en routers, async session management via `Depends(get_db)`
+- Use built-in FastAPI DI (`Depends`) para todo — session, auth, config
+
+### python-testing-patterns
+- AAA Pattern: Arrange → Act → Assert en cada test
+- Nombres descriptivos: `test_<unidad>_<escenario>_<esperado>`
+- Tests independientes — no shared state, cada test limpia
+- conftest.py para fixtures compartidos (session, client, override de dependencias)
+- Markers para categorizar: `@pytest.mark.unit`, `@pytest.mark.integration`
+- Tests de DB con base real o contenedor, NUNCA mocks de base de datos
+- `freezegun` para time-dependent tests
+- coverage targets: ≥80% líneas, ≥90% reglas de negocio
+
+### test-driven-development
+- RED: escribir test que falla ANTES que código de producción
+- Verificar RED: ejecutar test, confirmar que falla por feature faltante (no typo)
+- GREEN: escribir código MÍNIMO para que el test pase
+- Verificar GREEN: ejecutar y confirmar que pasa (todos los tests verdes)
+- REFACTOR: mejorar diseño manteniendo tests verdes, sin agregar comportamiento
+- TRIANGULATE: al menos 2 casos (happy path + edge) antes de refactor
+- NUNCA escribir código de producción sin test fallando primero
+- Si ya hay código sin test: BORRAR y empezar con TDD (no adaptar)
 
 ### dashboard-crud-page
 - Hook Trio obligatorio: `useFormModal<FormData, Entity>` (no raw useState), `useConfirmDialog<Entity>`, `usePagination(sortedItems)`
