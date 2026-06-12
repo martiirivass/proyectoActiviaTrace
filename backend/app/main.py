@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 from app.core.config import get_settings
@@ -24,6 +25,8 @@ from app.api.v1.routers.guardias import router as guardias_router
 from app.api.v1.routers.evaluaciones import router as evaluaciones_router
 from app.api.v1.routers.avisos import router as avisos_router
 from app.api.v1.routers.tareas import router as tareas_router
+from app.api.v1.routers.programas import programas_router
+from app.api.v1.routers.fechas_academicas import fechas_router
 
 
 @asynccontextmanager
@@ -64,6 +67,8 @@ def create_app() -> FastAPI:
     app.include_router(evaluaciones_router)
     app.include_router(avisos_router)
     app.include_router(tareas_router)
+    app.include_router(programas_router)
+    app.include_router(fechas_router)
 
     return app
 
