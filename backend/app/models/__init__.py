@@ -29,6 +29,8 @@ from app.models.aviso import Aviso, AlcanceAviso, SeveridadAviso
 from app.models.acknowledgment_aviso import AcknowledgmentAviso
 from app.models.tarea import Tarea, EstadoTarea
 from app.models.comentario_tarea import ComentarioTarea
+from app.models.programa_materia import ProgramaMateria
+from app.models.fecha_academica import FechaAcademica, TipoFecha
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -51,4 +53,6 @@ __all__ = [
     "AcknowledgmentAviso",
     "Tarea", "EstadoTarea",
     "ComentarioTarea",
+    "ProgramaMateria",
+    "FechaAcademica", "TipoFecha",
 ]
