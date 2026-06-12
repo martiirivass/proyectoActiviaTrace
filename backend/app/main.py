@@ -22,6 +22,8 @@ from app.api.v1.routers.comunicaciones import router as comunicaciones_router
 from app.api.v1.routers.encuentros import router as encuentros_router
 from app.api.v1.routers.guardias import router as guardias_router
 from app.api.v1.routers.evaluaciones import router as evaluaciones_router
+from app.api.v1.routers.avisos import router as avisos_router
+from app.api.v1.routers.tareas import router as tareas_router
 
 
 @asynccontextmanager
@@ -60,6 +62,8 @@ def create_app() -> FastAPI:
     app.include_router(encuentros_router)
     app.include_router(guardias_router)
     app.include_router(evaluaciones_router)
+    app.include_router(avisos_router)
+    app.include_router(tareas_router)
 
     return app
 
