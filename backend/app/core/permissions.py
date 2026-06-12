@@ -16,4 +16,3 @@ Asignación actual de permisos:
 ENCUENTROS_GESTIONAR: str = "encuentros:gestionar"
 COLOQUIOS_GESTIONAR: str = "coloquios:gestionar"
 COLOQUIOS_RESERVAR: str = "coloquios:reservar"
-AVISOS_PUBLICAR: str = "avisos:publicar"

@@ -21,14 +21,3 @@ from app.schemas.evaluaciones import (
     ResultadoResponse,
     ResultadoUpdate,
 )
-from app.schemas.avisos import (
-    AcknowledgmentResponse,
-    AvisoCreate,
-    AvisoDetailResponse,
-    AvisoListItem,
-    AvisoListResponse,
-    AvisoResponse,
-    AvisoUpdate,
-    ConfirmacionItem,
-    MetricasAvisoResponse,
-)
