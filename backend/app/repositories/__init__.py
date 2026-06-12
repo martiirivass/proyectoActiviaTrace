@@ -10,6 +10,8 @@ from app.repositories.evaluacion_repository import (
 )
 from app.repositories.reserva_repository import ReservaRepository
 from app.repositories.resultado_repository import ResultadoRepository
+from app.repositories.aviso_repository import AvisoRepository
+from app.repositories.acknowledgment_repository import AcknowledgmentRepository
 
 __all__ = [
     "SlotEncuentroRepository",
@@ -20,4 +22,6 @@ __all__ = [
     "EvaluacionAlumnoRepository",
     "ReservaRepository",
     "ResultadoRepository",
+    "AvisoRepository",
+    "AcknowledgmentRepository",
 ]

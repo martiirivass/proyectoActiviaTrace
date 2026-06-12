@@ -25,6 +25,8 @@ from app.models.guardia import Guardia, DiaGuardia, EstadoGuardia
 from app.models.evaluacion import Evaluacion, DiaConvocatoria, EvaluacionAlumnoConvocado, TipoEvaluacion
 from app.models.reserva_evaluacion import ReservaEvaluacion, EstadoReserva
 from app.models.resultado_evaluacion import ResultadoEvaluacion, EstadoResultado
+from app.models.aviso import Aviso, AlcanceAviso, SeveridadAviso
+from app.models.acknowledgment_aviso import AcknowledgmentAviso
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -43,4 +45,6 @@ __all__ = [
     "Evaluacion", "DiaConvocatoria", "EvaluacionAlumnoConvocado", "TipoEvaluacion",
     "ReservaEvaluacion", "EstadoReserva",
     "ResultadoEvaluacion", "EstadoResultado",
+    "Aviso", "AlcanceAviso", "SeveridadAviso",
+    "AcknowledgmentAviso",
 ]
