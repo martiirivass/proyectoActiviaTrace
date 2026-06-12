@@ -14,3 +14,5 @@ Asignación actual de permisos:
 # Constantes de permisos del sistema
 # Formato: modulo:accion
 ENCUENTROS_GESTIONAR: str = "encuentros:gestionar"
+COLOQUIOS_GESTIONAR: str = "coloquios:gestionar"
+COLOQUIOS_RESERVAR: str = "coloquios:reservar"
