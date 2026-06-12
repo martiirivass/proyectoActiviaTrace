@@ -22,9 +22,6 @@ from app.models.lote_comunicacion import LoteComunicacion, EstadoLote
 from app.models.slot_encuentro import SlotEncuentro, DiaSemana
 from app.models.instancia_encuentro import InstanciaEncuentro, EstadoInstancia
 from app.models.guardia import Guardia, DiaGuardia, EstadoGuardia
-from app.models.evaluacion import Evaluacion, DiaConvocatoria, EvaluacionAlumnoConvocado, TipoEvaluacion
-from app.models.reserva_evaluacion import ReservaEvaluacion, EstadoReserva
-from app.models.resultado_evaluacion import ResultadoEvaluacion, EstadoResultado
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -40,7 +37,4 @@ __all__ = [
     "SlotEncuentro", "DiaSemana",
     "InstanciaEncuentro", "EstadoInstancia",
     "Guardia", "DiaGuardia", "EstadoGuardia",
-    "Evaluacion", "DiaConvocatoria", "EvaluacionAlumnoConvocado", "TipoEvaluacion",
-    "ReservaEvaluacion", "EstadoReserva",
-    "ResultadoEvaluacion", "EstadoResultado",
 ]
