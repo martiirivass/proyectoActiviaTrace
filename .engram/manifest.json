@@ -152,6 +152,22 @@
       "sessions": 1,
       "memories": 0,
       "prompts": 9
+    },
+    {
+      "id": "a4a07eb9",
+      "created_by": "maxis",
+      "created_at": "2026-06-12T15:46:13Z",
+      "sessions": 0,
+      "memories": 0,
+      "prompts": 9
+    },
+    {
+      "id": "747be0fc",
+      "created_by": "maxis",
+      "created_at": "2026-06-12T15:55:06Z",
+      "sessions": 0,
+      "memories": 0,
+      "prompts": 5
     }
   ]
 }
