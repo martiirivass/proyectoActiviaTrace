@@ -160,6 +160,14 @@
       "sessions": 1,
       "memories": 0,
       "prompts": 6
+    },
+    {
+      "id": "0111f856",
+      "created_by": "gonzi",
+      "created_at": "2026-06-12T16:42:13Z",
+      "sessions": 0,
+      "memories": 0,
+      "prompts": 5
     }
   ]
 }

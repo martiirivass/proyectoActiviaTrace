@@ -27,6 +27,8 @@ from app.models.reserva_evaluacion import ReservaEvaluacion, EstadoReserva
 from app.models.resultado_evaluacion import ResultadoEvaluacion, EstadoResultado
 from app.models.aviso import Aviso, AlcanceAviso, SeveridadAviso
 from app.models.acknowledgment_aviso import AcknowledgmentAviso
+from app.models.tarea import Tarea, EstadoTarea
+from app.models.comentario_tarea import ComentarioTarea
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -47,4 +49,6 @@ __all__ = [
     "ResultadoEvaluacion", "EstadoResultado",
     "Aviso", "AlcanceAviso", "SeveridadAviso",
     "AcknowledgmentAviso",
+    "Tarea", "EstadoTarea",
+    "ComentarioTarea",
 ]
