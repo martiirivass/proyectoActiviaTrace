@@ -6,8 +6,16 @@
 # PDF generado (es regenerable; descomentar si NO querés versionarlo)
 # activia-trace-documentacion.pdf
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
 # OS / IDE
 Thumbs.db
 .DS_Store
 .vscode/
 .idea/
+
+# Engram - version chunks only, manifest.json is local index
+.engram/manifest.json
