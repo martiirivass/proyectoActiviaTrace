@@ -40,6 +40,14 @@
       "sessions": 1,
       "memories": 0,
       "prompts": 10
+    },
+    {
+      "id": "51daaeb3",
+      "created_by": "maxis",
+      "created_at": "2026-06-09T15:57:50Z",
+      "sessions": 1,
+      "memories": 0,
+      "prompts": 8
     }
   ]
 }

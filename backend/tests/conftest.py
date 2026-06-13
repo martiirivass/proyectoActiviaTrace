@@ -1,12 +1,18 @@
+import asyncio
 import os
+import sys
 import pytest
 import pytest_asyncio
+from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from httpx import ASGITransport, AsyncClient
 
-os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/activia_trace_test")
-os.environ.setdefault("SECRET_KEY", "a" * 32)
-os.environ.setdefault("ENCRYPTION_KEY", "b" * 32)
+os.environ["DATABASE_URL"] = "postgresql+asyncpg://postgres:postgres@localhost:5433/activia_trace_test"
+os.environ["SECRET_KEY"] = "a" * 32
+os.environ["ENCRYPTION_KEY"] = "b" * 32
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from app.core.config import get_settings
 get_settings.cache_clear()
@@ -17,7 +23,6 @@ from app.main import app
 
 @pytest.fixture(scope="session")
 def event_loop():
-    import asyncio
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
@@ -26,7 +31,7 @@ def event_loop():
 @pytest_asyncio.fixture(scope="session")
 async def test_engine():
     settings = get_settings()
-    engine = create_async_engine(settings.database_url, echo=False, pool_pre_ping=True)
+    engine = create_async_engine(settings.database_url, echo=False, poolclass=NullPool)
     yield engine
     await engine.dispose()
 
