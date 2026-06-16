@@ -16,6 +16,12 @@ from app.repositories.tarea_repository import TareaRepository
 from app.repositories.comentario_repository import ComentarioTareaRepository
 from app.repositories.programa_repository import ProgramaMateriaRepository
 from app.repositories.fecha_academica_repository import FechaAcademicaRepository
+from app.repositories.grilla_salarial_repository import (
+    SalarioBaseRepository,
+    SalarioPlusRepository,
+)
+from app.repositories.liquidacion_repository import LiquidacionRepository
+from app.repositories.factura_repository import FacturaRepository
 
 __all__ = [
     "SlotEncuentroRepository",
@@ -32,4 +38,8 @@ __all__ = [
     "ComentarioTareaRepository",
     "ProgramaMateriaRepository",
     "FechaAcademicaRepository",
+    "SalarioBaseRepository",
+    "SalarioPlusRepository",
+    "LiquidacionRepository",
+    "FacturaRepository",
 ]

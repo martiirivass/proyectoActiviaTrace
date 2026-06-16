@@ -30,6 +30,10 @@ from app.models.acknowledgment_aviso import AcknowledgmentAviso
 from app.models.tarea import Tarea, EstadoTarea
 from app.models.comentario_tarea import ComentarioTarea
 from app.models.programa_materia import ProgramaMateria
+from app.models.liquidacion import EstadoFactura, EstadoLiquidacion, Liquidacion, RolLiquidacion
+from app.models.salario_base import SalarioBase
+from app.models.salario_plus import SalarioPlus
+from app.models.factura import Factura
 from app.models.fecha_academica import FechaAcademica, TipoFecha
 
 __all__ = [
@@ -55,4 +59,9 @@ __all__ = [
     "ComentarioTarea",
     "ProgramaMateria",
     "FechaAcademica", "TipoFecha",
+    "RolLiquidacion", "EstadoLiquidacion", "EstadoFactura",
+    "SalarioBase",
+    "SalarioPlus",
+    "Liquidacion",
+    "Factura",
 ]
