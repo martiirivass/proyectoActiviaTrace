@@ -11,6 +11,15 @@ interface NavItem {
 
 const defaultNavItems: NavItem[] = [
   { label: 'Dashboard', to: '/dashboard' },
+  { label: 'Monitor General', to: '/monitor/general', requiredPermission: 'monitor:general' },
+  { label: 'Monitor Coord.', to: '/monitor/coordinacion', requiredPermission: 'monitor:coordinacion' },
+  { label: 'Equipos Docentes', to: '/dashboard/coordinacion/equipos', requiredPermission: 'equipos:ver' },
+  { label: 'Avisos', to: '/dashboard/coordinacion/avisos', requiredPermission: 'avisos:ver' },
+  { label: 'Tareas', to: '/dashboard/coordinacion/tareas', requiredPermission: 'tareas:ver' },
+  { label: 'Mis Tareas', to: '/dashboard/coordinacion/tareas/mias', requiredPermission: 'tareas:ver' },
+  { label: 'Encuentros', to: '/dashboard/coordinacion/encuentros', requiredPermission: 'encuentros:ver' },
+  { label: 'Coloquios', to: '/dashboard/coordinacion/coloquios', requiredPermission: 'coloquios:ver' },
+  { label: 'Setup Cuatrimestre', to: '/dashboard/coordinacion/setup', requiredPermission: 'setup:ver' },
   { label: 'Estructura Académica', to: '/estructura', requiredPermission: 'academica:read' },
   { label: 'Usuarios', to: '/usuarios', requiredPermission: 'usuarios:read' },
   { label: 'Auditoría', to: '/auditoria', requiredPermission: 'auditoria:read' },
@@ -110,6 +119,15 @@ export function AppLayout() {
 function getNavIcon(label: string): string {
   const icons: Record<string, string> = {
     Dashboard: '📊',
+    'Monitor General': '🔎',
+    'Monitor Coord.': '🔎',
+    'Equipos Docentes': '👨‍🏫',
+    Avisos: '📢',
+    Tareas: '✅',
+    'Mis Tareas': '📝',
+    Encuentros: '📅',
+    Coloquios: '🎓',
+    'Setup Cuatrimestre': '⚙️',
     'Estructura Académica': '🏛',
     Usuarios: '👥',
     Auditoría: '📋',
