@@ -4,11 +4,41 @@ import { AuthGuard } from '@/shared/components/guards/AuthGuard'
 import { AppLayout } from '@/shared/components/layout/AppLayout'
 import { Spinner } from '@/shared/components/ui/Spinner'
 
-// Lazy-loaded pages
+// Lazy-loaded pages - auth
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const TwoFactorPage = lazy(() => import('@/features/auth/pages/TwoFactorPage'))
 const RecoveryPage = lazy(() => import('@/features/auth/pages/RecoveryPage'))
 const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPasswordPage'))
+
+// Lazy-loaded pages - academico (C-22)
+const DocenteDashboardPage = lazy(
+  () => import('@/features/academico/pages/DocenteDashboardPage'),
+)
+const ComisionLayoutPage = lazy(
+  () => import('@/features/academico/pages/ComisionLayoutPage'),
+)
+const CalificacionesPage = lazy(
+  () => import('@/features/academico/pages/CalificacionesPage'),
+)
+const UmbralPage = lazy(() => import('@/features/academico/pages/UmbralPage'))
+const AtrasadosPage = lazy(
+  () => import('@/features/academico/pages/AtrasadosPage'),
+)
+const RankingPage = lazy(
+  () => import('@/features/academico/pages/RankingPage'),
+)
+const NotasFinalesPage = lazy(
+  () => import('@/features/academico/pages/NotasFinalesPage'),
+)
+const ReportesPage = lazy(
+  () => import('@/features/academico/pages/ReportesPage'),
+)
+const ComunicacionesPage = lazy(
+  () => import('@/features/academico/pages/ComunicacionesPage'),
+)
+const MonitorPage = lazy(
+  () => import('@/features/academico/pages/MonitorPage'),
+)
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -74,7 +104,85 @@ export const router = createBrowserRouter([
             path: 'dashboard',
             element: (
               <SuspenseWrapper>
-                <DashboardPlaceholder />
+                <DocenteDashboardPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'comision/:materiaId/:cohorteId',
+            element: (
+              <SuspenseWrapper>
+                <ComisionLayoutPage />
+              </SuspenseWrapper>
+            ),
+            children: [
+              {
+                index: true,
+                element: <Navigate to="calificaciones" replace />,
+              },
+              {
+                path: 'calificaciones',
+                element: (
+                  <SuspenseWrapper>
+                    <CalificacionesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'umbral',
+                element: (
+                  <SuspenseWrapper>
+                    <UmbralPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'atrasados',
+                element: (
+                  <SuspenseWrapper>
+                    <AtrasadosPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'ranking',
+                element: (
+                  <SuspenseWrapper>
+                    <RankingPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'notas',
+                element: (
+                  <SuspenseWrapper>
+                    <NotasFinalesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'reportes',
+                element: (
+                  <SuspenseWrapper>
+                    <ReportesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'comunicaciones',
+                element: (
+                  <SuspenseWrapper>
+                    <ComunicacionesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+          {
+            path: 'monitor',
+            element: (
+              <SuspenseWrapper>
+                <MonitorPage />
               </SuspenseWrapper>
             ),
           },
