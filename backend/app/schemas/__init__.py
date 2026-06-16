@@ -32,3 +32,19 @@ from app.schemas.fechas_academicas import (
     FechaAcademicaUpdate,
     FechasExportLMSResponse,
 )
+from app.schemas.liquidaciones import (
+    FacturaCreate,
+    FacturaListResponse,
+    FacturaResponse,
+    KPIResponse,
+    LiquidacionCalcularRequest,
+    LiquidacionCalcularResponse,
+    LiquidacionListResponse,
+    LiquidacionResponse,
+    SalarioBaseCreate,
+    SalarioBaseResponse,
+    SalarioBaseUpdate,
+    SalarioPlusCreate,
+    SalarioPlusResponse,
+    SalarioPlusUpdate,
+)

@@ -18,5 +18,6 @@ class Materia(SoftDeleteMixin, Base):
     nombre: Mapped[str] = mapped_column(String(255), nullable=False)
     moodle_integration_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     estado: Mapped[str] = mapped_column(String(10), nullable=False, default="Activa")
+    grupo_plus: Mapped[str | None] = mapped_column(String(50), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
