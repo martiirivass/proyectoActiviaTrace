@@ -86,6 +86,30 @@ const AdminColoquiosPage = lazy(
 const SetupCuatrimestrePage = lazy(
   () => import('@/features/coordinacion/pages/SetupCuatrimestrePage'),
 )
+
+// Lazy-loaded pages - finanzas (C-24)
+const LiquidacionesPage = lazy(
+  () => import('@/features/finanzas/pages/LiquidacionesPage'),
+)
+const GrillaSalarialPage = lazy(
+  () => import('@/features/finanzas/pages/GrillaSalarialPage'),
+)
+const FacturasPage = lazy(
+  () => import('@/features/finanzas/pages/FacturasPage'),
+)
+
+// Lazy-loaded pages - admin (C-24)
+const EstructuraPage = lazy(
+  () => import('@/features/admin/pages/EstructuraPage'),
+)
+const UsuariosPage = lazy(
+  () => import('@/features/admin/pages/UsuariosPage'),
+)
+const AuditoriaPage = lazy(
+  () => import('@/features/admin/pages/AuditoriaPage'),
+)
+const AuditLogPage = lazy(
+  () => import('@/features/admin/pages/AuditLogPage'),
 )
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
@@ -372,14 +396,66 @@ export const router = createBrowserRouter([
               </SuspenseWrapper>
             ),
           },
+          // Finanzas routes (C-24)
           {
-            path: '401',
+            path: 'finanzas/liquidaciones',
             element: (
               <SuspenseWrapper>
-                <UnauthorizedPlaceholder />
+                <LiquidacionesPage />
               </SuspenseWrapper>
             ),
           },
+          {
+            path: 'finanzas/grilla-salarial',
+            element: (
+              <SuspenseWrapper>
+                <GrillaSalarialPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'finanzas/facturas',
+            element: (
+              <SuspenseWrapper>
+                <FacturasPage />
+              </SuspenseWrapper>
+            ),
+          },
+          // Admin routes (C-24)
+          {
+            path: 'admin/estructura',
+            element: (
+              <SuspenseWrapper>
+                <EstructuraPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'admin/usuarios',
+            element: (
+              <SuspenseWrapper>
+                <UsuariosPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'admin/auditoria',
+            element: (
+              <SuspenseWrapper>
+                <AuditoriaPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'admin/auditoria/log',
+            element: (
+              <SuspenseWrapper>
+                <AuditLogPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '401',
         ],
       },
     ],
