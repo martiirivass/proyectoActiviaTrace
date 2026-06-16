@@ -10,7 +10,8 @@ interface NavItem {
 }
 
 const defaultNavItems: NavItem[] = [
-  { label: 'Dashboard', to: '/dashboard' },
+  { label: 'Dashboard', to: '/dashboard', requiredPermission: 'academico:ver' },
+  { label: 'Monitor', to: '/monitor', requiredPermission: 'monitor:ver' },
   { label: 'Estructura Académica', to: '/estructura', requiredPermission: 'academica:read' },
   { label: 'Usuarios', to: '/usuarios', requiredPermission: 'usuarios:read' },
   { label: 'Auditoría', to: '/auditoria', requiredPermission: 'auditoria:read' },
@@ -110,6 +111,7 @@ export function AppLayout() {
 function getNavIcon(label: string): string {
   const icons: Record<string, string> = {
     Dashboard: '📊',
+    Monitor: '🔍',
     'Estructura Académica': '🏛',
     Usuarios: '👥',
     Auditoría: '📋',
