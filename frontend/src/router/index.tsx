@@ -40,6 +40,54 @@ const MonitorPage = lazy(
   () => import('@/features/academico/pages/MonitorPage'),
 )
 
+// Lazy-loaded pages - coordinacion (C-23)
+const EquiposDashboardPage = lazy(
+  () => import('@/features/coordinacion/pages/EquiposDashboardPage'),
+)
+const AvisosPage = lazy(
+  () => import('@/features/coordinacion/pages/AvisosPage'),
+)
+const AvisoFormPage = lazy(
+  () => import('@/features/coordinacion/pages/AvisoFormPage'),
+)
+const TareasPage = lazy(
+  () => import('@/features/coordinacion/pages/TareasPage'),
+)
+const MisTareasPage = lazy(
+  () => import('@/features/coordinacion/pages/MisTareasPage'),
+)
+const TareaDetailPage = lazy(
+  () => import('@/features/coordinacion/pages/TareaDetailPage'),
+)
+const NuevaTareaPage = lazy(
+  () => import('@/features/coordinacion/pages/NuevaTareaPage'),
+)
+const MonitorGeneralPage = lazy(
+  () => import('@/features/coordinacion/pages/MonitorGeneralPage'),
+)
+const MonitorCoordinacionPage = lazy(
+  () => import('@/features/coordinacion/pages/MonitorCoordinacionPage'),
+)
+const EncuentrosAdminPage = lazy(
+  () => import('@/features/coordinacion/pages/EncuentrosAdminPage'),
+)
+const ColoquiosPage = lazy(
+  () => import('@/features/coordinacion/pages/ColoquiosPage'),
+)
+const ConvocatoriasListPage = lazy(
+  () => import('@/features/coordinacion/pages/ConvocatoriasListPage'),
+)
+const ConvocatoriaFormPage = lazy(
+  () => import('@/features/coordinacion/pages/ConvocatoriaFormPage'),
+)
+const AdminColoquiosPage = lazy(
+  () => import('@/features/coordinacion/pages/AdminColoquiosPage'),
+)
+const SetupCuatrimestrePage = lazy(
+  () => import('@/features/coordinacion/pages/SetupCuatrimestrePage'),
+)
+)
+
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   return (
     <Suspense
@@ -183,6 +231,144 @@ export const router = createBrowserRouter([
             element: (
               <SuspenseWrapper>
                 <MonitorPage />
+              </SuspenseWrapper>
+            ),
+          },
+          // Coordinacion routes (C-23)
+          {
+            path: 'dashboard/coordinacion/equipos',
+            element: (
+              <SuspenseWrapper>
+                <EquiposDashboardPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/avisos',
+            element: (
+              <SuspenseWrapper>
+                <AvisosPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/avisos/nuevo',
+            element: (
+              <SuspenseWrapper>
+                <AvisoFormPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/avisos/:id/editar',
+            element: (
+              <SuspenseWrapper>
+                <AvisoFormPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/tareas',
+            element: (
+              <SuspenseWrapper>
+                <TareasPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/tareas/mias',
+            element: (
+              <SuspenseWrapper>
+                <MisTareasPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/tareas/nueva',
+            element: (
+              <SuspenseWrapper>
+                <NuevaTareaPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/tareas/:id',
+            element: (
+              <SuspenseWrapper>
+                <TareaDetailPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/encuentros',
+            element: (
+              <SuspenseWrapper>
+                <EncuentrosAdminPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/coloquios',
+            element: (
+              <SuspenseWrapper>
+                <ColoquiosPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/coloquios/admin',
+            element: (
+              <SuspenseWrapper>
+                <AdminColoquiosPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/coloquios/convocatorias',
+            element: (
+              <SuspenseWrapper>
+                <ConvocatoriasListPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/coloquios/convocatorias/nueva',
+            element: (
+              <SuspenseWrapper>
+                <ConvocatoriaFormPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/coloquios/convocatorias/:id/editar',
+            element: (
+              <SuspenseWrapper>
+                <ConvocatoriaFormPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'dashboard/coordinacion/setup',
+            element: (
+              <SuspenseWrapper>
+                <SetupCuatrimestrePage />
+              </SuspenseWrapper>
+            ),
+          },
+          // Monitor routes for coordinacion (C-23)
+          {
+            path: 'monitor/general',
+            element: (
+              <SuspenseWrapper>
+                <MonitorGeneralPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'monitor/coordinacion',
+            element: (
+              <SuspenseWrapper>
+                <MonitorCoordinacionPage />
               </SuspenseWrapper>
             ),
           },
