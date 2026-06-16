@@ -29,6 +29,7 @@ class User(SoftDeleteMixin, Base):
     banco: Mapped[str | None] = mapped_column(String(255), nullable=True)
     regional: Mapped[str | None] = mapped_column(String(255), nullable=True)
     legajo_profesional: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    sexo: Mapped[str | None] = mapped_column(String(50), nullable=True)
     facturador: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     estado: Mapped[str] = mapped_column(String(50), default="Activo", nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
