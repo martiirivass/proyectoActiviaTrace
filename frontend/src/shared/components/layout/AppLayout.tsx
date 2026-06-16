@@ -9,6 +9,11 @@ interface NavItem {
   requiredPermission?: string
 }
 
+interface NavSection {
+  label: string
+  items: NavItem[]
+}
+
 const defaultNavItems: NavItem[] = [
   { label: 'Dashboard', to: '/dashboard' },
   { label: 'Estructura Académica', to: '/estructura', requiredPermission: 'academica:read' },
@@ -16,11 +21,33 @@ const defaultNavItems: NavItem[] = [
   { label: 'Auditoría', to: '/auditoria', requiredPermission: 'auditoria:read' },
 ]
 
+const finanzasNavItems: NavItem[] = [
+  { label: 'Liquidaciones', to: '/finanzas/liquidaciones', requiredPermission: 'liquidaciones:ver' },
+  { label: 'Grilla Salarial', to: '/finanzas/grilla-salarial', requiredPermission: 'grilla-salarial:ver' },
+  { label: 'Facturas', to: '/finanzas/facturas', requiredPermission: 'facturas:gestionar' },
+]
+
+const adminNavItems: NavItem[] = [
+  { label: 'Estructura', to: '/admin/estructura', requiredPermission: 'estructura:gestionar' },
+  { label: 'Usuarios', to: '/admin/usuarios', requiredPermission: 'usuarios:read' },
+  { label: 'Auditoría', to: '/admin/auditoria', requiredPermission: 'auditoria:read' },
+]
+
 export function AppLayout() {
   const { user, logout, permissions } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
-  const visibleItems = defaultNavItems.filter(
+  const visibleDefaultItems = defaultNavItems.filter(
+    (item) =>
+      !item.requiredPermission || permissions.includes(item.requiredPermission),
+  )
+
+  const visibleFinanzasItems = finanzasNavItems.filter(
+    (item) =>
+      !item.requiredPermission || permissions.includes(item.requiredPermission),
+  )
+
+  const visibleAdminItems = adminNavItems.filter(
     (item) =>
       !item.requiredPermission || permissions.includes(item.requiredPermission),
   )
@@ -54,8 +81,54 @@ export function AppLayout() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-1 p-3">
-          {visibleItems.map((item) => (
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+          {visibleDefaultItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'text-gray-700 hover:bg-gray-100'
+                } ${!sidebarOpen ? 'justify-center' : ''}`
+              }
+              title={item.label}
+            >
+              <span className="text-lg">{getNavIcon(item.label)}</span>
+              {sidebarOpen && <span>{item.label}</span>}
+            </NavLink>
+          ))}
+
+          {sidebarOpen && visibleFinanzasItems.length > 0 && (
+            <p className="mt-4 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+              Finanzas
+            </p>
+          )}
+          {visibleFinanzasItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'text-gray-700 hover:bg-gray-100'
+                } ${!sidebarOpen ? 'justify-center' : ''}`
+              }
+              title={item.label}
+            >
+              <span className="text-lg">{getNavIcon(item.label)}</span>
+              {sidebarOpen && <span>{item.label}</span>}
+            </NavLink>
+          ))}
+
+          {sidebarOpen && visibleAdminItems.length > 0 && (
+            <p className="mt-4 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+              Admin
+            </p>
+          )}
+          {visibleAdminItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -110,9 +183,13 @@ export function AppLayout() {
 function getNavIcon(label: string): string {
   const icons: Record<string, string> = {
     Dashboard: '📊',
-    'Estructura Académica': '🏛',
+    Liquidaciones: '💰',
+    'Grilla Salarial': '📊',
+    Facturas: '🧾',
+    Estructura: '🏛',
     Usuarios: '👥',
     Auditoría: '📋',
+    'Estructura Académica': '🏛',
   }
   return icons[label] ?? '•'
 }
