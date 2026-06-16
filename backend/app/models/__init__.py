@@ -35,6 +35,7 @@ from app.models.salario_base import SalarioBase
 from app.models.salario_plus import SalarioPlus
 from app.models.factura import Factura
 from app.models.fecha_academica import FechaAcademica, TipoFecha
+from app.models.mensaje import Mensaje
 
 __all__ = [
     "User", "Tenant", "Role", "Permission", "RolePermission",
@@ -64,4 +65,5 @@ __all__ = [
     "SalarioPlus",
     "Liquidacion",
     "Factura",
+    "Mensaje",
 ]

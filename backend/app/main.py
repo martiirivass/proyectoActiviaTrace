@@ -30,6 +30,8 @@ from app.api.v1.routers.fechas_academicas import fechas_router
 from app.api.v1.routers.grilla_salarial import router as grilla_salarial_router
 from app.api.v1.routers.liquidaciones import router as liquidaciones_router
 from app.api.v1.routers.facturas import router as facturas_router
+from app.api.v1.routers.perfil import perfil_router
+from app.api.v1.routers.inbox import inbox_router
 
 
 @asynccontextmanager
@@ -75,6 +77,8 @@ def create_app() -> FastAPI:
     app.include_router(grilla_salarial_router)
     app.include_router(liquidaciones_router)
     app.include_router(facturas_router)
+    app.include_router(perfil_router)
+    app.include_router(inbox_router)
 
     return app
 
