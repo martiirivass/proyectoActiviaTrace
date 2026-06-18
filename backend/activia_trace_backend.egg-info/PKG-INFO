@@ -13,10 +13,13 @@ Requires-Dist: pydantic>=2.9.2
 Requires-Dist: pydantic-settings>=2.5.2
 Requires-Dist: argon2-cffi>=23.1.0
 Requires-Dist: python-jose[cryptography]>=3.3.0
+Requires-Dist: pyotp>=2.9.0
+Requires-Dist: qrcode[pil]>=7.4.2
 Requires-Dist: opentelemetry-instrumentation-fastapi>=0.48b0
 Requires-Dist: opentelemetry-exporter-otlp>=1.28.0
 Requires-Dist: opentelemetry-sdk>=1.28.0
 Requires-Dist: python-json-logger>=2.0.7
+Requires-Dist: aiosmtplib>=3.0.1
 Provides-Extra: test
 Requires-Dist: pytest>=8.3.4; extra == "test"
 Requires-Dist: pytest-asyncio>=0.23.8; extra == "test"

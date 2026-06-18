@@ -7,7 +7,8 @@ from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from httpx import ASGITransport, AsyncClient
 
-os.environ["DATABASE_URL"] = "postgresql+asyncpg://postgres:postgres@localhost:5433/activia_trace_test"
+# Default to port 5432 for native PostgreSQL; Docker users can override via env before import
+os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://postgres:postgres@localhost:5432/activia_trace_test")
 os.environ["SECRET_KEY"] = "a" * 32
 os.environ["ENCRYPTION_KEY"] = "b" * 32
 
@@ -30,8 +31,13 @@ def event_loop():
 
 @pytest_asyncio.fixture(scope="session")
 async def test_engine():
+    from app.core.config import refresh_settings
+    refresh_settings()
     settings = get_settings()
-    engine = create_async_engine(settings.database_url, echo=False, poolclass=NullPool)
+    db_url = settings.database_url
+    print(f"\n[DEBUGCONFTEST] DB_URL='{db_url}'")
+    print(f"[DEBUGCONFTEST] ENV_DB_URL='{os.environ.get('DATABASE_URL', 'NOT SET')}'")
+    engine = create_async_engine(db_url, echo=False, poolclass=NullPool)
     yield engine
     await engine.dispose()
 
@@ -52,6 +58,13 @@ async def test_session_factory(test_engine):
 async def db_session(test_session_factory):
     async with test_session_factory() as session:
         yield session
+
+
+@pytest_asyncio.fixture(autouse=True)
+async def reset_globals():
+    from app.core.dependencies import reset_rate_limiter
+    await reset_rate_limiter()
+    yield
 
 
 @pytest_asyncio.fixture

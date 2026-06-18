@@ -1,10 +1,21 @@
 import uuid
+from datetime import datetime, timezone
 
 import pytest
 from sqlalchemy import inspect
 
 from app.core.database import Base
-from app.models import Permission, Role, Tenant, User, UserRole, UserTenant
+from app.models import (
+    Permission,
+    RecoveryToken,
+    RefreshToken,
+    Role,
+    RolePermission,
+    Tenant,
+    User,
+    UserRole,
+    UserTenant,
+)
 from app.models.mixins import SoftDeleteMixin
 
 
@@ -90,10 +101,22 @@ class TestRoleModel:
         col = Role.__table__.c["tenant_id"]
         assert len(col.foreign_keys) > 0
 
+    def test_has_is_system_column(self):
+        col = Role.__table__.c["is_system"]
+        assert col is not None
+        assert col.default is not None
+        assert col.default.arg is False
+
+    def test_has_description_column(self):
+        col = Role.__table__.c["description"]
+        assert col is not None
+        assert col.nullable
+
     def test_has_relationships(self):
         mapper = inspect(Role)
         rel_names = [r.key for r in mapper.relationships]
         assert "user_roles" in rel_names
+        assert "role_permissions" in rel_names
 
 
 class TestPermissionModel:
@@ -112,6 +135,60 @@ class TestPermissionModel:
         col = Permission.__table__.c["name"]
         assert col.comment is not None
         assert "modulo:accion" in col.comment
+
+    def test_has_module_column(self):
+        col = Permission.__table__.c["module"]
+        assert col is not None
+        assert not col.nullable
+
+    def test_has_action_column(self):
+        col = Permission.__table__.c["action"]
+        assert col is not None
+        assert not col.nullable
+
+    def test_has_timestamps(self):
+        assert "created_at" in Permission.__table__.c
+        assert "updated_at" in Permission.__table__.c
+
+
+class TestRolePermissionModel:
+    def test_no_soft_delete(self):
+        assert not issubclass(RolePermission, SoftDeleteMixin)
+
+    def test_has_uuid_pk(self):
+        col = RolePermission.__table__.c["id"]
+        assert col.primary_key
+
+    def test_has_role_id_fk(self):
+        col = RolePermission.__table__.c["role_id"]
+        assert len(col.foreign_keys) > 0
+
+    def test_has_permission_id_fk(self):
+        col = RolePermission.__table__.c["permission_id"]
+        assert len(col.foreign_keys) > 0
+
+    def test_has_tenant_id_fk(self):
+        col = RolePermission.__table__.c["tenant_id"]
+        assert len(col.foreign_keys) > 0
+
+    def test_has_scope_column(self):
+        col = RolePermission.__table__.c["scope"]
+        assert col is not None
+        assert not col.nullable
+
+    def test_unique_role_permission(self):
+        constraints = [c for c in RolePermission.__table__.constraints if "uq_role_permission" in str(c.name or "")]
+        assert len(constraints) == 1
+        uq = constraints[0]
+        cols = [c.name for c in uq.columns]
+        assert "role_id" in cols
+        assert "permission_id" in cols
+
+    def test_has_relationships(self):
+        mapper = inspect(RolePermission)
+        rel_names = [r.key for r in mapper.relationships]
+        assert "role" in rel_names
+        assert "permission" in rel_names
 
 
 class TestUserRoleModel:
@@ -225,5 +302,94 @@ class TestUserModelDB:
 
         user2 = User(email="e2@test.com", legajo="LEG-UNIQUE", nombre="C", apellido="D", password_hash="h2")
         db_session.add(user2)
+        with pytest.raises(Exception):
+            await db_session.flush()
+
+    async def test_user_has_2fa_defaults(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="2fa@test.com", legajo="LEG-2FA", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+        assert user.totp_secret is None
+        assert user.is_2fa_enabled is False
+
+    async def test_user_can_set_2fa_fields(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(
+            email="2fa-on@test.com", legajo="LEG-2FA2", nombre="A", apellido="B",
+            password_hash="h", totp_secret="encrypted_secret", is_2fa_enabled=True,
+        )
+        db_session.add(user)
+        await db_session.flush()
+        assert user.totp_secret == "encrypted_secret"
+        assert user.is_2fa_enabled is True
+
+
+class TestRefreshTokenModelDB:
+    async def test_create_refresh_token(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="rt@test.com", legajo="LEG-RT", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+
+        token = RefreshToken(user_id=user.id, token_hash="abc123", expires_at=datetime.now(timezone.utc))
+        db_session.add(token)
+        await db_session.flush()
+
+        assert token.id is not None
+        assert isinstance(token.id, uuid.UUID)
+        assert token.user_id == user.id
+        assert token.token_hash == "abc123"
+        assert token.revoked_at is None
+
+    async def test_refresh_token_unique_hash(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="rt2@test.com", legajo="LEG-RT2", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+
+        t1 = RefreshToken(user_id=user.id, token_hash="same-hash", expires_at=datetime.now(timezone.utc))
+        db_session.add(t1)
+        await db_session.flush()
+
+        t2 = RefreshToken(user_id=user.id, token_hash="same-hash", expires_at=datetime.now(timezone.utc))
+        db_session.add(t2)
+        with pytest.raises(Exception):
+            await db_session.flush()
+
+    async def test_refresh_token_hash_indexed(self, test_engine):
+        col = RefreshToken.__table__.c["token_hash"]
+        assert col.unique
+        assert col.index
+
+
+class TestRecoveryTokenModelDB:
+    async def test_create_recovery_token(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="rec@test.com", legajo="LEG-REC", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+
+        token = RecoveryToken(user_id=user.id, token_hash="def456", expires_at=datetime.now(timezone.utc))
+        db_session.add(token)
+        await db_session.flush()
+
+        assert token.id is not None
+        assert isinstance(token.id, uuid.UUID)
+        assert token.user_id == user.id
+        assert token.used_at is None
+
+    async def test_recovery_token_unique_hash(self, db_session, test_engine):
+        await _ensure_table(test_engine)
+        user = User(email="rec2@test.com", legajo="LEG-REC2", nombre="A", apellido="B", password_hash="h")
+        db_session.add(user)
+        await db_session.flush()
+
+        t1 = RecoveryToken(user_id=user.id, token_hash="same", expires_at=datetime.now(timezone.utc))
+        db_session.add(t1)
+        await db_session.flush()
+
+        t2 = RecoveryToken(user_id=user.id, token_hash="same", expires_at=datetime.now(timezone.utc))
+        db_session.add(t2)
         with pytest.raises(Exception):
             await db_session.flush()
