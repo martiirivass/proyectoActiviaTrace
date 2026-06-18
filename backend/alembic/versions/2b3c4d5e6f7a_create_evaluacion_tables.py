@@ -18,11 +18,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # --- Create enums ---
-    sa.Enum("Parcial", "TP", "Coloquio", "Recuperatorio", name="tipo_evaluacion").create(op.get_bind())
-    sa.Enum("Activa", "Cancelada", name="estado_reserva").create(op.get_bind())
-    sa.Enum("Borrador", "Definitivo", name="estado_resultado").create(op.get_bind())
-
     # --- evaluaciones ---
     op.create_table(
         "evaluaciones",

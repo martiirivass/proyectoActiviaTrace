@@ -6,6 +6,8 @@ import type {
   EnviarComunicacionResponse,
   TrackingLote,
   SeguimientoMateria,
+  TrackingMessage,
+  TrackingDistribucion,
 } from '@/features/academico/types'
 
 export const comunicacionesService = {
@@ -13,14 +15,41 @@ export const comunicacionesService = {
     post<ComunicacionPreview>('/comunicaciones/preview', data),
 
   enviarIndividual: (data: EnviarComunicacionRequest): Promise<EnviarComunicacionResponse> =>
-    post<EnviarComunicacionResponse>('/comunicaciones/enviar', data),
+    post<EnviarComunicacionResponse>('/comunicaciones/individual', {
+      asunto: data.asunto,
+      cuerpo: data.cuerpo,
+      materia_id: data.materia_id,
+      destinatario_email: data.destinatarios[0],
+    }),
 
   enviarLote: (data: EnviarComunicacionRequest): Promise<EnviarComunicacionResponse> =>
-    post<EnviarComunicacionResponse>('/comunicaciones/enviar-lote', data),
+    post<EnviarComunicacionResponse>('/comunicaciones/masivo', data),
 
   getTrackingPorLote: (loteId: string): Promise<TrackingLote> =>
-    get<TrackingLote>(`/comunicaciones/lote/${loteId}`),
+    get<TrackingLote>(`/comunicaciones/lotes/${loteId}`),
 
-  getTrackingPorMateria: (materiaId: string): Promise<SeguimientoMateria> =>
-    get<SeguimientoMateria>(`/comunicaciones/materia/${materiaId}`),
+  getTrackingPorMateria: async (materiaId: string): Promise<SeguimientoMateria> => {
+    // GET /comunicaciones returns {items, total, offset, limit}
+    const listRes = await get<{
+      items: any[]
+      total: number
+      offset: number
+      limit: number
+    }>('/comunicaciones', { params: { materia_id: materiaId } })
+
+    // GET /comunicaciones/distribucion returns DistribucionEstados
+    const distribucion = await get<TrackingDistribucion>('/comunicaciones/distribucion', {
+      params: { materia_id: materiaId },
+    })
+
+    const comunicaciones: TrackingMessage[] = listRes.items.map((item: any) => ({
+      id: item.id ?? '',
+      destinatario: item.destinatario ?? '',
+      asunto: item.asunto ?? '',
+      estado: item.estado ?? ('pendiente' as const),
+      fecha_envio: item.enviado_at ?? item.created_at ?? null,
+    }))
+
+    return { comunicaciones, distribucion }
+  },
 }
