@@ -203,5 +203,24 @@ async def reset(
 @router.get("/me")
 async def get_me(
     current_user: CurrentUser = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ):
-    return {"id": str(current_user.id), "email": current_user.email, "roles": current_user.roles}
+    from sqlalchemy import select
+    from app.models import User
+    from app.services.permission_service import PermissionService
+
+    stmt = select(User).where(User.id == current_user.id)
+    rows = await db.execute(stmt)
+    user = rows.scalar_one_or_none()
+
+    svc = PermissionService(db)
+    permisos = await svc.get_effective_permissions(current_user.id)
+
+    return {
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "nombre": user.nombre if user else "",
+        "apellido": user.apellido if user else "",
+        "roles": current_user.roles,
+        "permisos": list(permisos),
+    }

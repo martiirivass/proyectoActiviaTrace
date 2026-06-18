@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ColoquiosPage } from '@/features/coordinacion/pages/ColoquiosPage'
-import { ConvocatoriasListPage } from '@/features/coordinacion/pages/ConvocatoriasListPage'
+import ColoquiosPage from '@/features/coordinacion/pages/ColoquiosPage'
+import ConvocatoriasListPage from '@/features/coordinacion/pages/ConvocatoriasListPage'
 import { Card } from '@/shared/components/ui/Card'
 
 type SubSection = 'metricas' | 'convocatorias' | 'resultados' | 'reservas'

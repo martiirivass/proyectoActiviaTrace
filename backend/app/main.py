@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
 from app.core.logging import setup_logging
@@ -32,6 +33,7 @@ from app.api.v1.routers.liquidaciones import router as liquidaciones_router
 from app.api.v1.routers.facturas import router as facturas_router
 from app.api.v1.routers.perfil import perfil_router
 from app.api.v1.routers.inbox import inbox_router
+from app.api.v1.routers.mis_comisiones import router as mis_comisiones_router
 
 
 @asynccontextmanager
@@ -49,6 +51,15 @@ def create_app() -> FastAPI:
         title="activia-trace API",
         version="0.1.0",
         lifespan=lifespan,
+    )
+
+    # CORS — allow frontend dev server
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
     app.include_router(health.router)
@@ -79,6 +90,7 @@ def create_app() -> FastAPI:
     app.include_router(facturas_router)
     app.include_router(perfil_router)
     app.include_router(inbox_router)
+    app.include_router(mis_comisiones_router)
 
     return app
 

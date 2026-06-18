@@ -19,6 +19,10 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_factory() as session:
         try:
             yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
         finally:
             await session.close()
 
@@ -90,7 +94,7 @@ _rate_limiter: RateLimiter | None = None
 def get_rate_limiter() -> RateLimiter:
     global _rate_limiter
     if _rate_limiter is None:
-        _rate_limiter = RateLimiter(max_attempts=5, window_seconds=60)
+        _rate_limiter = RateLimiter(max_attempts=50, window_seconds=60)
     return _rate_limiter
 
 

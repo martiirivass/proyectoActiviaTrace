@@ -58,6 +58,7 @@ def upgrade() -> None:
         sa.Column('module', sa.String()),
         sa.Column('action', sa.String()),
         sa.Column('description', sa.String()),
+        sa.Column('is_deleted', sa.Boolean()),
     )
 
     roles_table = sa.table('roles',
@@ -66,6 +67,7 @@ def upgrade() -> None:
         sa.Column('description', sa.String()),
         sa.Column('is_system', sa.Boolean()),
         sa.Column('tenant_id', sa.UUID()),
+        sa.Column('is_deleted', sa.Boolean()),
     )
 
     role_permissions_table = sa.table('role_permissions',
@@ -142,6 +144,7 @@ def upgrade() -> None:
                 module=p["module"],
                 action=p["action"],
                 description=p["description"],
+                is_deleted=False,
             )
         )
 
@@ -171,11 +174,13 @@ def upgrade() -> None:
                 sa.Column('name', sa.String()),
                 sa.Column('code', sa.String()),
                 sa.Column('is_active', sa.Boolean()),
+                sa.Column('is_deleted', sa.Boolean()),
             )).values(
                 id=default_tenant_id,
                 name="System",
                 code="SYS",
                 is_active=True,
+                is_deleted=False,
             )
         )
 
@@ -191,6 +196,7 @@ def upgrade() -> None:
                 description=rd["description"],
                 is_system=is_sys,
                 tenant_id=default_tenant_id,
+                is_deleted=False,
             )
         )
 

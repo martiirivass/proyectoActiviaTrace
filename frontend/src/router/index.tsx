@@ -456,6 +456,12 @@ export const router = createBrowserRouter([
           },
           {
             path: '401',
+            element: (
+              <SuspenseWrapper>
+                <UnauthorizedPlaceholder />
+              </SuspenseWrapper>
+            ),
+          },
         ],
       },
     ],

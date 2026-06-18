@@ -45,7 +45,10 @@ class UmbralData:
 @dataclass
 class AtrasadoResult:
     """Result item for atrasados endpoint."""
+    alumno_id: str
     alumno_nombre: str
+    alumno_apellido: str
+    email: str
     actividad: str
     nota: float | None = None
     causa: str = "actividad_faltante"  # "actividad_faltante" | "nota_bajo_umbral"
@@ -54,8 +57,10 @@ class AtrasadoResult:
 @dataclass
 class RankingItem:
     """Ranking item."""
+    alumno_id: str
     alumno_nombre: str
-    email: str | None
+    alumno_apellido: str
+    email: str
     comision: str | None
     aprobadas: int
     total: int
@@ -87,8 +92,10 @@ class ReporteRapidoResult:
 @dataclass
 class NotaFinalItem:
     """Nota final per alumno."""
+    alumno_id: str
     alumno_nombre: str
-    email: str | None
+    alumno_apellido: str
+    email: str
     comision: str | None
     actividades_consideradas: int
     nota_final: float | None
@@ -152,7 +159,10 @@ def compute_atrasados(
             if cal is None:
                 # Actividad faltante
                 resultados.append(AtrasadoResult(
-                    alumno_nombre=f"{alumno.nombre} {alumno.apellidos}",
+                    alumno_id=str(alumno.entrada_padron_id),
+                    alumno_nombre=alumno.nombre,
+                    alumno_apellido=alumno.apellidos,
+                    email=alumno.email,
                     actividad=actividad,
                     nota=None,
                     causa="actividad_faltante",
@@ -160,7 +170,10 @@ def compute_atrasados(
             elif not cal.aprobado:
                 # Nota bajo umbral
                 resultados.append(AtrasadoResult(
-                    alumno_nombre=f"{alumno.nombre} {alumno.apellidos}",
+                    alumno_id=str(alumno.entrada_padron_id),
+                    alumno_nombre=alumno.nombre,
+                    alumno_apellido=alumno.apellidos,
+                    email=alumno.email,
                     actividad=actividad,
                     nota=cal.nota_numerica,
                     causa="nota_bajo_umbral",
@@ -218,7 +231,9 @@ def compute_ranking(
             continue
         pct = (count / total_actividades * 100) if total_actividades > 0 else 0.0
         ranking.append(RankingItem(
-            alumno_nombre=f"{alumno.nombre} {alumno.apellidos}",
+            alumno_id=str(alumno.entrada_padron_id),
+            alumno_nombre=alumno.nombre,
+            alumno_apellido=alumno.apellidos,
             email=alumno.email,
             comision=alumno.comision,
             aprobadas=count,
@@ -377,7 +392,9 @@ def compute_nota_final(
             nota_final = None
 
         resultados.append(NotaFinalItem(
-            alumno_nombre=f"{alumno.nombre} {alumno.apellidos}",
+            alumno_id=str(alumno.entrada_padron_id),
+            alumno_nombre=alumno.nombre,
+            alumno_apellido=alumno.apellidos,
             email=alumno.email,
             comision=alumno.comision,
             actividades_consideradas=len(numericas),

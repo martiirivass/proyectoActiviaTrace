@@ -98,7 +98,10 @@ class AnalisisService:
 
         items = [
             AtrasadoItem(
+                alumno_id=r.alumno_id,
                 alumno_nombre=r.alumno_nombre,
+                alumno_apellido=r.alumno_apellido,
+                email=r.email,
                 actividad=r.actividad,
                 nota=r.nota,
                 causa=r.causa,
@@ -161,14 +164,17 @@ class AnalisisService:
 
         items = [
             RankingItem(
+                alumno_id=r.alumno_id,
                 alumno_nombre=r.alumno_nombre,
+                alumno_apellido=r.alumno_apellido,
                 email=r.email,
                 comision=r.comision,
+                posicion=idx + 1,
                 aprobadas=r.aprobadas,
                 total=r.total,
                 porcentaje=r.porcentaje,
             )
-            for r in result
+            for idx, r in enumerate(result)
         ]
 
         return RankingResponse(items=items, total=len(items))
@@ -286,16 +292,17 @@ class AnalisisService:
 
         items = [
             NotaFinalItem(
+                alumno_id=r.alumno_id,
                 alumno_nombre=r.alumno_nombre,
+                alumno_apellido=r.alumno_apellido,
                 email=r.email,
                 comision=r.comision,
                 actividades_consideradas=r.actividades_consideradas,
                 nota_final=r.nota_final,
-                actividades_detalle=[
+                actividades=[
                     ActividadDetalleItem(
-                        actividad=d["actividad"],
-                        nota_numerica=d["nota_numerica"],
-                        nota_textual=d["nota_textual"],
+                        nombre=d["actividad"],
+                        nota=d["nota_numerica"] if d["nota_numerica"] is not None else d["nota_textual"],
                     )
                     for d in r.actividades_detalle
                 ],

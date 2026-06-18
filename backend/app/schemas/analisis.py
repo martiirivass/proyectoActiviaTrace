@@ -8,7 +8,10 @@ from pydantic import BaseModel, ConfigDict
 class AtrasadoItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    alumno_id: str
     alumno_nombre: str
+    alumno_apellido: str
+    email: str
     actividad: str
     nota: float | None = None
     causa: str  # "actividad_faltante" | "nota_bajo_umbral"
@@ -24,9 +27,12 @@ class AtrasadosResponse(BaseModel):
 class RankingItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    alumno_id: str
     alumno_nombre: str
-    email: str | None = None
+    alumno_apellido: str
+    email: str
     comision: str | None = None
+    posicion: int = 0
     aprobadas: int
     total: int
     porcentaje: float
@@ -64,20 +70,21 @@ class ReporteRapidoResponse(BaseModel):
 class ActividadDetalleItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    actividad: str
-    nota_numerica: float | None = None
-    nota_textual: str | None = None
+    nombre: str
+    nota: str | float | None = None
 
 
 class NotaFinalItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    alumno_id: str
     alumno_nombre: str
-    email: str | None = None
+    alumno_apellido: str
+    email: str
     comision: str | None = None
     actividades_consideradas: int
     nota_final: float | None = None
-    actividades_detalle: list[ActividadDetalleItem] = []
+    actividades: list[ActividadDetalleItem] = []
 
 
 class NotasFinalesResponse(BaseModel):
