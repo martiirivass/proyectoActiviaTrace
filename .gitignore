@@ -10,6 +10,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.egg-info/
+.env
 
 # OS / IDE
 Thumbs.db

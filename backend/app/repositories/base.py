@@ -27,13 +27,15 @@ class BaseRepository(Generic[T]):
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def list(self, include_deleted: bool = False, **filters) -> list[T]:
+    async def list(self, include_deleted: bool = False, offset: int = 0, limit: int | None = None, **filters) -> list[T]:
         stmt = select(self.model)
         if issubclass(self.model, SoftDeleteMixin) and not include_deleted:
             stmt = stmt.where(self.model.is_deleted == False)
         for key, value in filters.items():
             if hasattr(self.model, key):
                 stmt = stmt.where(getattr(self.model, key) == value)
+        if limit is not None:
+            stmt = stmt.offset(offset).limit(limit)
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
@@ -59,6 +61,8 @@ class BaseRepository(Generic[T]):
         obj = result.scalar_one_or_none()
         if obj is None:
             raise ValueError(f"{self.model.__name__} with id {id} not found")
+        if hasattr(obj, "is_system") and obj.is_system:
+            raise ValueError("Cannot delete system role")
         obj.soft_delete()
         await self.session.flush()
 
@@ -78,13 +82,15 @@ class TenantScopedRepository(BaseRepository[T]):
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def list(self, include_deleted: bool = False, **filters) -> list[T]:
+    async def list(self, include_deleted: bool = False, offset: int = 0, limit: int | None = None, **filters) -> list[T]:
         stmt = select(self.model).where(self.model.tenant_id == self.tenant_id)
         if issubclass(self.model, SoftDeleteMixin) and not include_deleted:
             stmt = stmt.where(self.model.is_deleted == False)
         for key, value in filters.items():
             if hasattr(self.model, key):
                 stmt = stmt.where(getattr(self.model, key) == value)
+        if limit is not None:
+            stmt = stmt.offset(offset).limit(limit)
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
