@@ -32,14 +32,12 @@ class TestUserModel:
         col = User.__table__.c["id"]
         assert col.primary_key
 
-    def test_email_unique_and_indexed(self):
+    def test_email_indexed(self):
         col = User.__table__.c["email"]
-        assert col.unique
         assert col.index
 
-    def test_legajo_unique_and_indexed(self):
+    def test_legajo_indexed(self):
         col = User.__table__.c["legajo"]
-        assert col.unique
         assert col.index
 
     def test_password_hash_not_nullable(self):
@@ -264,15 +262,20 @@ class TestUserTenantModel:
 
 @pytest.mark.asyncio
 class TestUserModelDB:
+    @staticmethod
+    def _make_user(email: str, legajo: str, tenant_id: uuid.UUID, **kw) -> User:
+        return User(
+            email=email, legajo=legajo, tenant_id=tenant_id,
+            nombre="A", apellido="B", password_hash="h", **kw,
+        )
+
     async def test_create_user(self, db_session, test_engine):
         await _ensure_table(test_engine)
-        user = User(
-            email="test@example.com",
-            legajo="LEG-001",
-            nombre="Juan",
-            apellido="Pérez",
-            password_hash="argon2_hash_here",
-        )
+        tid = uuid.uuid4()
+        db_session.add(Tenant(id=tid, code="T1", name="Test Tenant"))
+        await db_session.flush()
+
+        user = self._make_user("test@example.com", "LEG-001", tid)
         db_session.add(user)
         await db_session.flush()
 
@@ -283,31 +286,49 @@ class TestUserModelDB:
         assert user.is_deleted is False
         assert user.deleted_at is None
 
-    async def test_user_email_unique(self, db_session, test_engine):
+    async def test_user_same_email_different_tenants_allowed(self, db_session, test_engine):
+        """Multi-tenant: same email can exist in different tenants."""
         await _ensure_table(test_engine)
-        user1 = User(email="duplicate@test.com", legajo="LEG-002", nombre="A", apellido="B", password_hash="h1")
+        tid1 = uuid.uuid4()
+        tid2 = uuid.uuid4()
+        db_session.add(Tenant(id=tid1, code="T-UA", name="Tenant A"))
+        db_session.add(Tenant(id=tid2, code="T-UB", name="Tenant B"))
+        await db_session.flush()
+
+        user1 = self._make_user("cross@test.com", "LEG-A", tid1)
         db_session.add(user1)
         await db_session.flush()
 
-        user2 = User(email="duplicate@test.com", legajo="LEG-003", nombre="C", apellido="D", password_hash="h2")
+        user2 = self._make_user("cross@test.com", "LEG-B", tid2)
         db_session.add(user2)
-        with pytest.raises(Exception):
-            await db_session.flush()
+        await db_session.flush()
+        # Both inserted successfully — email is NOT globally unique
 
-    async def test_user_legajo_unique(self, db_session, test_engine):
+    async def test_user_same_legajo_different_tenants_allowed(self, db_session, test_engine):
+        """Multi-tenant: same legajo can exist in different tenants."""
         await _ensure_table(test_engine)
-        user1 = User(email="e1@test.com", legajo="LEG-UNIQUE", nombre="A", apellido="B", password_hash="h1")
+        tid1 = uuid.uuid4()
+        tid2 = uuid.uuid4()
+        db_session.add(Tenant(id=tid1, code="T-LA", name="Legajo Tenant A"))
+        db_session.add(Tenant(id=tid2, code="T-LB", name="Legajo Tenant B"))
+        await db_session.flush()
+
+        user1 = self._make_user("a@test.com", "LEG-X", tid1)
         db_session.add(user1)
         await db_session.flush()
 
-        user2 = User(email="e2@test.com", legajo="LEG-UNIQUE", nombre="C", apellido="D", password_hash="h2")
+        user2 = self._make_user("b@test.com", "LEG-X", tid2)
         db_session.add(user2)
-        with pytest.raises(Exception):
-            await db_session.flush()
+        await db_session.flush()
+        # Both inserted successfully — legajo is NOT globally unique
 
     async def test_user_has_2fa_defaults(self, db_session, test_engine):
         await _ensure_table(test_engine)
-        user = User(email="2fa@test.com", legajo="LEG-2FA", nombre="A", apellido="B", password_hash="h")
+        tid = uuid.uuid4()
+        db_session.add(Tenant(id=tid, code="T4", name="Test Tenant"))
+        await db_session.flush()
+
+        user = self._make_user("2fa@test.com", "LEG-2FA", tid)
         db_session.add(user)
         await db_session.flush()
         assert user.totp_secret is None
@@ -315,10 +336,11 @@ class TestUserModelDB:
 
     async def test_user_can_set_2fa_fields(self, db_session, test_engine):
         await _ensure_table(test_engine)
-        user = User(
-            email="2fa-on@test.com", legajo="LEG-2FA2", nombre="A", apellido="B",
-            password_hash="h", totp_secret="encrypted_secret", is_2fa_enabled=True,
-        )
+        tid = uuid.uuid4()
+        db_session.add(Tenant(id=tid, code="T5", name="Test Tenant"))
+        await db_session.flush()
+
+        user = self._make_user("2fa-on@test.com", "LEG-2FA2", tid, totp_secret="encrypted_secret", is_2fa_enabled=True)
         db_session.add(user)
         await db_session.flush()
         assert user.totp_secret == "encrypted_secret"
@@ -328,7 +350,10 @@ class TestUserModelDB:
 class TestRefreshTokenModelDB:
     async def test_create_refresh_token(self, db_session, test_engine):
         await _ensure_table(test_engine)
-        user = User(email="rt@test.com", legajo="LEG-RT", nombre="A", apellido="B", password_hash="h")
+        tid = uuid.uuid4()
+        db_session.add(Tenant(id=tid, code="RT1", name="Test Tenant"))
+        await db_session.flush()
+        user = User(email="rt@test.com", legajo="LEG-RT", nombre="A", apellido="B", password_hash="h", tenant_id=tid)
         db_session.add(user)
         await db_session.flush()
 
@@ -344,7 +369,10 @@ class TestRefreshTokenModelDB:
 
     async def test_refresh_token_unique_hash(self, db_session, test_engine):
         await _ensure_table(test_engine)
-        user = User(email="rt2@test.com", legajo="LEG-RT2", nombre="A", apellido="B", password_hash="h")
+        tid = uuid.uuid4()
+        db_session.add(Tenant(id=tid, code="RT2", name="Test Tenant"))
+        await db_session.flush()
+        user = User(email="rt2@test.com", legajo="LEG-RT2", nombre="A", apellido="B", password_hash="h", tenant_id=tid)
         db_session.add(user)
         await db_session.flush()
 
@@ -366,7 +394,10 @@ class TestRefreshTokenModelDB:
 class TestRecoveryTokenModelDB:
     async def test_create_recovery_token(self, db_session, test_engine):
         await _ensure_table(test_engine)
-        user = User(email="rec@test.com", legajo="LEG-REC", nombre="A", apellido="B", password_hash="h")
+        tid = uuid.uuid4()
+        db_session.add(Tenant(id=tid, code="REC1", name="Test Tenant"))
+        await db_session.flush()
+        user = User(email="rec@test.com", legajo="LEG-REC", nombre="A", apellido="B", password_hash="h", tenant_id=tid)
         db_session.add(user)
         await db_session.flush()
 
@@ -381,7 +412,10 @@ class TestRecoveryTokenModelDB:
 
     async def test_recovery_token_unique_hash(self, db_session, test_engine):
         await _ensure_table(test_engine)
-        user = User(email="rec2@test.com", legajo="LEG-REC2", nombre="A", apellido="B", password_hash="h")
+        tid = uuid.uuid4()
+        db_session.add(Tenant(id=tid, code="REC2", name="Test Tenant"))
+        await db_session.flush()
+        user = User(email="rec2@test.com", legajo="LEG-REC2", nombre="A", apellido="B", password_hash="h", tenant_id=tid)
         db_session.add(user)
         await db_session.flush()
 

@@ -11,7 +11,7 @@ const schema = z.object({
   periodo: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Formato de período inválido (AAAA-MM)'),
   detalle: z.string().min(1, 'El detalle es requerido'),
   referencia_archivo: z.string().optional(),
-  tamano_kb: z.coerce.number().optional(),
+  tamano_kb: z.number().optional(),
   materia_id: z.string().optional(),
   comision: z.string().optional(),
 }).refine(
@@ -76,7 +76,7 @@ export function FacturaFormModal({ item, onSave, onClose, loading }: FacturaForm
             {errors.detalle && <p className="text-sm text-red-600">{errors.detalle.message}</p>}
           </div>
           <Input label="Referencia Archivo (opcional)" {...register('referencia_archivo')} />
-          <Input label="Tamaño KB (opcional)" type="number" {...register('tamano_kb')} />
+          <Input label="Tamaño KB (opcional)" type="number" {...register('tamano_kb', { valueAsNumber: true })} />
           <Input label="ID Materia (opcional)" {...register('materia_id')} />
 
           {materiaId && (

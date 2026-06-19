@@ -20,7 +20,6 @@ from app.models.fecha_academica import FechaAcademica, TipoFecha
 from app.models.mixins import SoftDeleteMixin
 from app.models.programa_materia import ProgramaMateria
 
-pytestmark = pytest.mark.asyncio
 
 
 # ===== Helper functions =====

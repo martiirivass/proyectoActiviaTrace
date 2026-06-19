@@ -203,8 +203,8 @@ export const academicoHandlers = [
     })
   }),
 
-  // GET /monitor/seguimiento
-  http.get(`${API_BASE}/monitor/seguimiento`, () => {
+  // GET /analisis/monitor-seguimiento
+  http.get(`${API_BASE}/analisis/monitor-seguimiento`, () => {
     return HttpResponse.json([
       {
         alumno: { id: 'al-1', legajo: '123', nombre: 'Juan', apellido: 'Pérez', email: 'juan@test.com' },

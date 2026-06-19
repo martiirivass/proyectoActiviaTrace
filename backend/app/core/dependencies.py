@@ -38,10 +38,10 @@ async def get_current_user(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     payload = verify_token(token, "access")
     if payload is None:
-        from jose import jwt as jose_jwt
+        import jwt
         try:
-            jose_jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
-        except jose_jwt.ExpiredSignatureError:
+            jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        except jwt.ExpiredSignatureError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
         except Exception:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")

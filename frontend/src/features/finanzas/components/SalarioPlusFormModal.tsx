@@ -10,9 +10,9 @@ const schema = z.object({
   grupo: z.string().min(1, 'El grupo es requerido'),
   rol: z.string().min(1, 'El rol es requerido'),
   descripcion: z.string().min(1, 'La descripción es requerida'),
-  monto: z.coerce.number().positive('El monto debe ser mayor a 0'),
+  monto: z.number().positive('El monto debe ser mayor a 0'),
   desde: z.string().min(1, 'La fecha desde es requerida'),
-  hasta: z.string().nullable().optional(),
+  hasta: z.string().nullable(),
 })
 
 interface SalarioPlusFormModalProps {
@@ -63,7 +63,7 @@ export function SalarioPlusFormModal({ item, onSave, onClose, loading }: Salario
           <Input label="Grupo" error={errors.grupo?.message} {...register('grupo')} />
           <Input label="Rol" error={errors.rol?.message} {...register('rol')} />
           <Input label="Descripción" error={errors.descripcion?.message} {...register('descripcion')} />
-          <Input label="Monto" type="number" step="0.01" error={errors.monto?.message} {...register('monto')} />
+          <Input label="Monto" type="number" step="0.01" error={errors.monto?.message} {...register('monto', { valueAsNumber: true })} />
           <Input label="Desde" type="date" error={errors.desde?.message} {...register('desde')} />
           <Input label="Hasta (opcional)" type="date" {...register('hasta')} />
 

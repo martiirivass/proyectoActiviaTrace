@@ -160,7 +160,7 @@ def compute_atrasados(
                 # Actividad faltante
                 resultados.append(AtrasadoResult(
                     alumno_id=str(alumno.entrada_padron_id),
-                    alumno_nombre=alumno.nombre,
+                    alumno_nombre=f"{alumno.nombre} {alumno.apellidos}",
                     alumno_apellido=alumno.apellidos,
                     email=alumno.email,
                     actividad=actividad,
@@ -171,7 +171,7 @@ def compute_atrasados(
                 # Nota bajo umbral
                 resultados.append(AtrasadoResult(
                     alumno_id=str(alumno.entrada_padron_id),
-                    alumno_nombre=alumno.nombre,
+                    alumno_nombre=f"{alumno.nombre} {alumno.apellidos}",
                     alumno_apellido=alumno.apellidos,
                     email=alumno.email,
                     actividad=actividad,
@@ -232,7 +232,7 @@ def compute_ranking(
         pct = (count / total_actividades * 100) if total_actividades > 0 else 0.0
         ranking.append(RankingItem(
             alumno_id=str(alumno.entrada_padron_id),
-            alumno_nombre=alumno.nombre,
+            alumno_nombre=f"{alumno.nombre} {alumno.apellidos}",
             alumno_apellido=alumno.apellidos,
             email=alumno.email,
             comision=alumno.comision,
@@ -393,7 +393,7 @@ def compute_nota_final(
 
         resultados.append(NotaFinalItem(
             alumno_id=str(alumno.entrada_padron_id),
-            alumno_nombre=alumno.nombre,
+            alumno_nombre=f"{alumno.nombre} {alumno.apellidos}",
             alumno_apellido=alumno.apellidos,
             email=alumno.email,
             comision=alumno.comision,

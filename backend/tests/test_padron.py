@@ -19,8 +19,6 @@ from app.models.entrada_padron import EntradaPadron
 from app.models.mixins import SoftDeleteMixin
 from app.models.version_padron import VersionPadron
 
-pytestmark = pytest.mark.asyncio
-
 
 async def _ensure_table(engine):
     async with engine.begin() as conn:

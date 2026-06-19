@@ -20,8 +20,6 @@ from app.models.lote_comunicacion import EstadoLote, LoteComunicacion
 from app.models.mixins import SoftDeleteMixin
 from app.models.audit_log import AuditLog
 
-pytestmark = pytest.mark.asyncio
-
 
 # ===== Helpers =====
 

@@ -1,4 +1,4 @@
-import re
+﻿import re
 from datetime import date
 from uuid import UUID
 
@@ -145,7 +145,7 @@ class FechaAcademicaService:
     ) -> str:
         if materia_id is None:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="materia_id es requerido para exportar",
             )
 
@@ -170,20 +170,20 @@ class FechaAcademicaService:
             return TipoFecha(tipo)
         except ValueError:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Tipo inválido: {tipo}. Valores válidos: {[e.value for e in TipoFecha]}",
             )
 
     def _validate_numero(self, numero: int) -> None:
         if numero <= 0:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="numero debe ser un entero positivo",
             )
 
     def _validate_periodo(self, periodo: str) -> None:
         if not PERIODO_REGEX.match(periodo):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail='periodo debe tener formato AAAA-S (ej: "2026-1", "2026-2")',
             )

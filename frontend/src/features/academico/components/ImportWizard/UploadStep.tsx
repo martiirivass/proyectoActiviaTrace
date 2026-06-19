@@ -1,5 +1,4 @@
 import { useRef, type ChangeEvent } from 'react'
-import { Button } from '@/shared/components/ui/Button'
 
 const ALLOWED_EXTENSIONS = ['.xlsx', '.csv']
 

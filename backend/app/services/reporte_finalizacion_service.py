@@ -1,4 +1,4 @@
-import io
+﻿import io
 import os
 from uuid import UUID
 
@@ -29,7 +29,7 @@ class ReporteFinalizacionService:
 
         if ext not in (".xlsx", ".csv"):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Formato no soportado. Use archivos .xlsx o .csv",
             )
 
@@ -43,7 +43,7 @@ class ReporteFinalizacionService:
             raise
         except Exception:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Error al parsear el archivo",
             )
 
