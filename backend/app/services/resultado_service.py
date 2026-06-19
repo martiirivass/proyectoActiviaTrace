@@ -1,4 +1,4 @@
-from uuid import UUID
+﻿from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -75,7 +75,7 @@ class ResultadoService:
 
             if current_estado == EstadoResultado.DEFINITIVO and nuevo_estado == EstadoResultado.BORRADOR:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="No se puede volver de Definitivo a Borrador",
                 )
 

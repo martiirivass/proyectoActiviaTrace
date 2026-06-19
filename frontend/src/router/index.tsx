@@ -456,6 +456,12 @@ export const router = createBrowserRouter([
           },
           {
             path: '401',
+            element: (
+              <SuspenseWrapper>
+                <UnauthorizedPlaceholder />
+              </SuspenseWrapper>
+            ),
+          },
         ],
       },
     ],
@@ -470,14 +476,6 @@ export const router = createBrowserRouter([
     ),
   },
 ])
-
-function DashboardPlaceholder() {
-  return (
-    <div className="flex min-h-64 items-center justify-center">
-      <p className="text-gray-500">Dashboard — próximamente</p>
-    </div>
-  )
-}
 
 function UnauthorizedPlaceholder() {
   return (

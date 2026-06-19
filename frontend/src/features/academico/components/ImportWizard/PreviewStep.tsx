@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import type { CalificacionPreview } from '@/features/academico/types'
 
 interface PreviewStepProps {
@@ -95,7 +94,7 @@ export function PreviewStep({
                     key={col}
                     className="whitespace-nowrap px-4 py-2 text-gray-700"
                   >
-                    {(row.alumno as Record<string, string>)[col] ?? '-'}
+                    {(row.alumno as unknown as Record<string, string>)[col] ?? '-'}
                   </td>
                 ))}
                 {preview.actividades_detectadas.map((act) => (

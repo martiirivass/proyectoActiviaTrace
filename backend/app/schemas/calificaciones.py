@@ -34,7 +34,7 @@ class CalificacionConfirmResponse(BaseModel):
 
 class UmbralMateriaRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    asignacion_id: UUID
+    asignacion_id: UUID | None = None
     materia_id: UUID
     umbral_pct: int
     valores_aprobatorios: list[str] = []

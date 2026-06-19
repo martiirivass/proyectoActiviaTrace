@@ -26,7 +26,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=100), nullable=False, comment='modulo:accion format'),
     sa.Column('description', sa.String(length=500), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('is_deleted', sa.Boolean(), nullable=False),
+    sa.Column('is_deleted', sa.Boolean(), nullable=False, server_default=sa.text('false')),
     sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
@@ -37,7 +37,7 @@ def upgrade() -> None:
     sa.Column('code', sa.String(length=50), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('is_deleted', sa.Boolean(), nullable=False),
+    sa.Column('is_deleted', sa.Boolean(), nullable=False, server_default=sa.text('false')),
     sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -51,7 +51,7 @@ def upgrade() -> None:
     sa.Column('password_hash', sa.String(length=255), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('is_deleted', sa.Boolean(), nullable=False),
+    sa.Column('is_deleted', sa.Boolean(), nullable=False, server_default=sa.text('false')),
     sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -63,7 +63,7 @@ def upgrade() -> None:
     sa.Column('description', sa.String(length=500), nullable=True),
     sa.Column('tenant_id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('is_deleted', sa.Boolean(), nullable=False),
+    sa.Column('is_deleted', sa.Boolean(), nullable=False, server_default=sa.text('false')),
     sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['tenant_id'], ['tenants.id'], ),
     sa.PrimaryKeyConstraint('id'),

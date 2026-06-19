@@ -34,7 +34,7 @@ def upgrade() -> None:
     op.alter_column("users", "legajo", nullable=True, type_=sa.String(50))
 
     # Drop global unique on email, create composite unique index instead
-    op.drop_constraint("users_email_key", "users", type_="unique")
+    op.drop_index("ix_users_email", table_name="users")
     op.create_index("ix_users_email_tenant", "users", ["email", "tenant_id"], unique=True)
     op.create_index("ix_users_tenant_id", "users", ["tenant_id"])
 

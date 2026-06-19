@@ -19,6 +19,10 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_factory() as session:
         try:
             yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
         finally:
             await session.close()
 
@@ -34,10 +38,10 @@ async def get_current_user(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     payload = verify_token(token, "access")
     if payload is None:
-        from jose import jwt as jose_jwt
+        import jwt
         try:
-            jose_jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
-        except jose_jwt.ExpiredSignatureError:
+            jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        except jwt.ExpiredSignatureError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
         except Exception:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
@@ -90,7 +94,7 @@ _rate_limiter: RateLimiter | None = None
 def get_rate_limiter() -> RateLimiter:
     global _rate_limiter
     if _rate_limiter is None:
-        _rate_limiter = RateLimiter(max_attempts=5, window_seconds=60)
+        _rate_limiter = RateLimiter(max_attempts=50, window_seconds=60)
     return _rate_limiter
 
 

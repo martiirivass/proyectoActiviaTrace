@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+﻿from datetime import date, timedelta
 from uuid import UUID
 
 from fastapi import HTTPException, Response, status
@@ -74,12 +74,12 @@ class EncuentroService:
             # Modo recurrente
             if data.cant_semanas <= 0:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Para modo recurrente, cant_semanas debe ser mayor a 0",
                 )
             if not data.dia_semana or not data.fecha_inicio:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Para modo recurrente se requiere dia_semana y fecha_inicio",
                 )
 
@@ -165,7 +165,7 @@ class EncuentroService:
             # Validate video_url only when estado=Realizado
             if video_url and nuevo_estado != EstadoInstancia.REALIZADO:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="video_url solo puede establecerse cuando el estado es Realizado",
                 )
 

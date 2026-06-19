@@ -1,4 +1,4 @@
-from collections import defaultdict
+﻿from collections import defaultdict
 from datetime import date
 from decimal import Decimal
 from uuid import UUID
@@ -61,7 +61,7 @@ class LiquidacionService:
         base = await self.base_repo.find_vigente_base_by_rol(rol, fecha_vigencia)
         if not base:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"No hay SalarioBase vigente para rol {rol} en {periodo}",
             )
 
@@ -77,7 +77,7 @@ class LiquidacionService:
 
         if not asignaciones:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"El usuario no tiene asignaciones activas en la cohorte {cohorte_id}",
             )
 
@@ -184,7 +184,7 @@ class LiquidacionService:
                 base = await self.base_repo.find_vigente_base_by_rol(rol, fecha_vigencia)
                 if not base:
                     raise HTTPException(
-                        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                         detail=(
                             f"No hay SalarioBase vigente para rol {rol} en período {periodo}. "
                             "La operación se canceló — no se generó ninguna liquidación."

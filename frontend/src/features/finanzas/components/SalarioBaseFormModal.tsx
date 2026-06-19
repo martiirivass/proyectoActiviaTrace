@@ -8,9 +8,9 @@ import type { SalarioBase, SalarioBaseFormData } from '@/features/finanzas/types
 
 const schema = z.object({
   rol: z.string().min(1, 'El rol es requerido'),
-  monto: z.coerce.number().positive('El monto debe ser mayor a 0'),
+  monto: z.number().positive('El monto debe ser mayor a 0'),
   desde: z.string().min(1, 'La fecha desde es requerida'),
-  hasta: z.string().nullable().optional(),
+  hasta: z.string().nullable(),
 })
 
 interface SalarioBaseFormModalProps {
@@ -65,7 +65,7 @@ export function SalarioBaseFormModal({ item, onSave, onClose, loading }: Salario
             type="number"
             step="0.01"
             error={errors.monto?.message}
-            {...register('monto')}
+            {...register('monto', { valueAsNumber: true })}
           />
           <Input
             label="Desde"

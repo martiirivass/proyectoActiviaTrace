@@ -1,4 +1,4 @@
-from uuid import UUID
+﻿from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -258,7 +258,7 @@ class TareaService:
         except ValueError:
             validos = [e.value for e in EstadoTarea]
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Estado inválido: '{estado_str}'. Valores permitidos: {', '.join(validos)}",
             )
 
@@ -273,7 +273,7 @@ class TareaService:
 
         if nuevo_estado not in allowed:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=(
                     f"Transición inválida: {estado_actual.value} → {nuevo_estado.value}. "
                     f"Solo se permite: {', '.join(a.value for a in allowed) if allowed else 'ninguna'}"
@@ -283,6 +283,6 @@ class TareaService:
         # Non-admin users cannot set admin-only states
         if not self.is_admin and nuevo_estado in _ADMIN_ONLY_STATES:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Solo coordinación puede cambiar estado a '{nuevo_estado.value}'",
             )

@@ -8,6 +8,8 @@
 
 # Python
 __pycache__/
+*.py[cod]
+*$py.class
 *.pyc
 *.egg-info/
 .env
@@ -17,3 +19,6 @@ Thumbs.db
 .DS_Store
 .vscode/
 .idea/
+
+# Engram - version chunks only, manifest.json is local index
+.engram/manifest.json

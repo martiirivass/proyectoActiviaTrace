@@ -19,9 +19,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # Create tipo_fecha enum
-    op.execute("CREATE TYPE tipofecha AS ENUM ('Parcial', 'TP', 'Coloquio', 'Recuperatorio')")
-
     # Create programas_materia table
     op.create_table(
         "programas_materia",

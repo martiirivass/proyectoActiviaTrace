@@ -1,4 +1,4 @@
-import csv
+﻿import csv
 import io
 import os
 from uuid import UUID
@@ -32,7 +32,7 @@ class PadronService:
 
         if ext not in (".xlsx", ".csv"):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Formato no soportado. Use archivos .xlsx o .csv",
             )
 
@@ -46,7 +46,7 @@ class PadronService:
             raise
         except Exception:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Error al parsear el archivo",
             )
 
@@ -109,7 +109,7 @@ class PadronService:
         faltantes = self.COLUMNAS_REQUERIDAS - header_set
         if faltantes:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Columnas faltantes: {', '.join(sorted(faltantes))}",
             )
 

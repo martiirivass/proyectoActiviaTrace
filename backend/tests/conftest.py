@@ -7,8 +7,8 @@ from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from httpx import ASGITransport, AsyncClient
 
-# Default to port 5432 for native PostgreSQL; Docker users can override via env before import
-os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://postgres:postgres@localhost:5432/activia_trace_test")
+# Default to port 5433 for Docker Compose PostgreSQL; override via DATABASE_URL env
+os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5433/activia_trace_test")
 os.environ["SECRET_KEY"] = "a" * 32
 os.environ["ENCRYPTION_KEY"] = "b" * 32
 

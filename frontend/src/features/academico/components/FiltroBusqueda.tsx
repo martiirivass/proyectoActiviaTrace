@@ -14,7 +14,7 @@ export function FiltroBusqueda({
   debounceMs = 300,
 }: FiltroBusquedaProps) {
   const [local, setLocal] = useState(value)
-  const timerRef = useRef<ReturnType<typeof setTimeout>>()
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     setLocal(value)
