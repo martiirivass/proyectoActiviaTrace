@@ -37,6 +37,10 @@
 | Verifying implementation vs plan | openspec-verify | `~/.config/opencode/skills/openspec-verify/SKILL.md` |
 | Generating CHANGES.md roadmap | roadmap-generator | `~/.config/opencode/skills/roadmap-generator/SKILL.md` |
 | Creating or editing agent skills | skill-creator | `~/.config/opencode/skills/skill-creator/SKILL.md` |
+| Generating UI designs from code | stitch-generate-design | `~/.agents/skills/stitch-generate-design/SKILL.md` |
+| Writing design docs in markdown | design-md | `~/.agents/skills/design-md/SKILL.md` |
+| Building React components with conventions | react-components | `~/.agents/skills/react-components/SKILL.md` |
+| Implementing OPSX changes with SDD | openspec-implementation | `~/.agents/skills/openspec-implementation/SKILL.md` |
 
 ---
 
