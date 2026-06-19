@@ -32,8 +32,6 @@ from app.models import (
 )
 from app.models.audit_log import AuditLog
 
-pytestmark = pytest.mark.asyncio
-
 
 # =============================================================================
 # Helpers

@@ -9,11 +9,6 @@ interface NavItem {
   requiredPermission?: string
 }
 
-interface NavSection {
-  label: string
-  items: NavItem[]
-}
-
 const defaultNavItems: NavItem[] = [
   { label: 'Dashboard', to: '/dashboard', requiredPermission: 'academico:ver' },
   { label: 'Monitor', to: '/monitor', requiredPermission: 'monitor:ver' },

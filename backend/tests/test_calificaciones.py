@@ -21,8 +21,6 @@ from app.models.calificacion import Calificacion, OrigenCalificacion
 from app.models.umbral_materia import UmbralMateria
 from app.models.mixins import SoftDeleteMixin
 
-pytestmark = pytest.mark.asyncio
-
 
 # ===== Helpers =====
 

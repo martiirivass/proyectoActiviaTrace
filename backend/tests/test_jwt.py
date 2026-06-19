@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 
 import pytest
-from jose import jwt as jose_jwt
+import jwt
 
 from app.core.config import get_settings
 from app.core.security import (
@@ -28,7 +28,7 @@ class TestJWTFunctions:
         tenant_id = uuid.uuid4()
         roles = ["admin", "coordinator"]
         token = create_access_token(user_id=user_id, tenant_id=tenant_id, roles=roles)
-        payload = jose_jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
         assert payload["sub"] == str(user_id)
         assert payload["tenant_id"] == str(tenant_id)
         assert payload["roles"] == roles
@@ -39,7 +39,7 @@ class TestJWTFunctions:
     def test_create_access_token_expiry(self):
         user_id = uuid.uuid4()
         token = create_access_token(user_id=user_id, tenant_id=uuid.uuid4(), roles=["user"])
-        payload = jose_jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
         exp = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
         now = datetime.now(timezone.utc)
         assert now < exp
@@ -56,7 +56,7 @@ class TestJWTFunctions:
     def test_create_2fa_token(self):
         user_id = uuid.uuid4()
         token = create_2fa_token(user_id=user_id, tenant_id=uuid.uuid4())
-        payload = jose_jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
         assert payload["sub"] == str(user_id)
         assert payload["type"] == "2fa"
         assert "tenant_id" in payload
@@ -64,7 +64,7 @@ class TestJWTFunctions:
     def test_create_2fa_token_expiry(self):
         user_id = uuid.uuid4()
         token = create_2fa_token(user_id=user_id, tenant_id=uuid.uuid4())
-        payload = jose_jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
         exp = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
         diff = exp - datetime.now(timezone.utc)
         assert timedelta(minutes=4) < diff < timedelta(minutes=6)
@@ -86,7 +86,7 @@ class TestJWTFunctions:
     def test_decode_token_expired(self):
         user_id = uuid.uuid4()
         import time
-        from jose import jwt as jose_jwt
+        from app.core.security import decode_token
 
         payload = {
             "sub": str(user_id),
@@ -96,7 +96,7 @@ class TestJWTFunctions:
             "exp": int(time.time()) - 3600,
             "iat": int(time.time()) - 7200,
         }
-        expired_token = jose_jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
+        expired_token = jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
         result = decode_token(expired_token)
         assert result is None
 

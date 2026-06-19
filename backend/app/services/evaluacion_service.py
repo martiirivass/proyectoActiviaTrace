@@ -1,4 +1,4 @@
-from uuid import UUID
+﻿from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy import select
@@ -180,7 +180,7 @@ class EvaluacionService:
         role_alumno = alumnos_role.scalar_one_or_none()
         if not role_alumno:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="No existe el rol ALUMNO en este tenant",
             )
 
@@ -202,7 +202,7 @@ class EvaluacionService:
 
         if invalidos:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Los siguientes UUIDs no son alumnos válidos en el tenant: {[str(i) for i in invalidos]}",
             )
 

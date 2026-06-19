@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+﻿from datetime import datetime, timezone
 from uuid import UUID
 
 from fastapi import HTTPException, status
@@ -57,7 +57,7 @@ class FacturaService:
         # Validate periodo format
         if not re.match(r"^\d{4}-(0[1-9]|1[0-2])$", data.periodo):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Periodo debe tener formato AAAA-MM (ej: 2026-06)",
             )
 

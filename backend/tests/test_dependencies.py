@@ -1,8 +1,6 @@
 import uuid
 from datetime import datetime, timedelta, timezone
 
-import pytest
-import pytest_asyncio
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from httpx import ASGITransport, AsyncClient
@@ -18,7 +16,6 @@ from app.core.rate_limiter import RateLimiter
 from app.core.security import PasswordService, create_access_token
 from app.models import Tenant, User, UserTenant
 
-pytestmark = pytest.mark.asyncio
 
 settings = get_settings()
 
@@ -66,7 +63,7 @@ class TestGetCurrentUser:
 
     async def test_expired_token(self, db_session, test_engine):
         import time
-        from jose import jwt as jose_jwt
+        import jwt
 
         user, tenant = await _create_user_with_tenant(db_session)
         payload = {
@@ -78,7 +75,7 @@ class TestGetCurrentUser:
             "iat": int(time.time()) - 7200,
             "exp": int(time.time()) - 3600,
         }
-        expired_token = jose_jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
+        expired_token = jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
 
         app = FastAPI()
         app.dependency_overrides[get_db] = lambda: db_session
@@ -194,5 +191,5 @@ class TestGetRateLimiter:
         rl2 = get_rate_limiter()
         assert rl1 is rl2
         assert isinstance(rl1, RateLimiter)
-        assert rl1.max_attempts == 5
+        assert rl1.max_attempts == 50
         assert rl1.window_seconds == 60

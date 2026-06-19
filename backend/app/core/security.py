@@ -8,7 +8,7 @@ import uuid
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from jose import jwt as jose_jwt
+import jwt
 
 from app.core.config import get_settings
 
@@ -25,7 +25,7 @@ def create_access_token(user_id: uuid.UUID, tenant_id: uuid.UUID, roles: list[st
         "iat": int(time.time()),
         "exp": int(time.time()) + settings.access_token_expire_minutes * 60,
     }
-    return jose_jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
+    return jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
 
 
 def create_refresh_token(user_id: uuid.UUID, tenant_id: uuid.UUID, roles: list[str]) -> str:
@@ -40,14 +40,14 @@ def create_2fa_token(user_id: uuid.UUID, tenant_id: uuid.UUID) -> str:
         "iat": int(time.time()),
         "exp": int(time.time()) + settings.two_fa_token_expire_minutes * 60,
     }
-    return jose_jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
+    return jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
 
 
 def decode_token(token: str) -> dict | None:
     try:
-        payload = jose_jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
         return payload
-    except jose_jwt.JWTError:
+    except jwt.PyJWTError:
         return None
 
 
